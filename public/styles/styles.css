@@ -1,0 +1,57 @@
+*{
+    border : border-box;
+}
+
+body {
+    background-color : #F2FCFC;
+}
+
+.font {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.nav-background-color {
+    background-color : white;
+    box-shadow : rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+}
+
+/* Home page */
+
+.home-header-text {
+    padding : 2% 0;
+    text-align : center;
+}
+
+.custom-card-img-styles {
+    width : 150px;
+    height: 150px;
+    object-fit: cover;
+    margin : 0 auto;
+}
+
+.custom-card-box-shadow:hover {
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
+}
+
+.home-collections-dashboard-top {
+    width : 20vw;
+    position : fixed;
+    padding : 10px;
+    margin-left : 40px;
+}
+
+.home-products-container {
+    width : 70vw;
+    margin-left : 20vw;
+}
+
+.home-product-item {
+    margin : 4px 35px;
+}
+
+/* Product Description */
+
+.pd-return-button {
+    margin : 5% 0 5% 5%;
+}
+

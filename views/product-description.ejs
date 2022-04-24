@@ -1,0 +1,42 @@
+<%- include('partials/header') -%>
+
+<a class="btn btn-primary btn-lg pd-return-button" href="/" role="button">Back to products</a>
+
+
+<main>
+    <div class="container py-4">
+      <header class="pb-3 mb-4 border-bottom">
+        <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
+          <span class="fs-4">View Product</span>
+        </a>
+      </header>
+  
+      <div class="p-5 mb-4 bg-light rounded-3">
+        <div class="container-fluid py-5">
+            <div class="row">
+                <div class="card col-lg-4" style="width: 20rem;">
+                    <img src=<%= product.productImage %> class="card-img-top" alt="product.productName"><br>
+                    <div class="card-body">
+                      <h5 class="card-title">$</h5><br>
+                      <a href="/checkout/<%= product.productName %>" class="btn btn-danger btn-lg">Checkout</a>
+                    </div>
+                  </div>
+              <div class="col-lg-8 fs-4">
+                <h2><%= product.productName %></h2><br>
+                <p>Using a series of utilities, you can create this jumbotron, just like the one in previous versions of Bootstrap. Check out the examples below for how you can remix and restyle it to your liking.</p><br>
+                <em>Vendor:</em>
+              </div>
+            </div>   
+        </div>
+      </div>
+    </div>
+<main>
+
+
+
+
+
+
+
+
+<%- include('partials/footer') -%>
