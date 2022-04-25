@@ -1,7 +1,5 @@
 <%- include('partials/header') -%>
 
-
-
 <a class="btn btn-primary btn-lg pd-return-button" href="/" role="button">Back to products</a>
 
 
@@ -20,12 +18,44 @@
                     <img src=<%= product.productImage %> class="card-img-top" alt="product.productName"><br>
                     <h2><%= product.productName %></h2>
                     <div class="card-body">
-                      <h5 class="card-title">$ <%= product.price %></h5><br>
+                        <div class="input-group input-group-lg mb-3">
+                          <span class="input-group-text" id="inputGroup-sizing-sm">Units</span>
+                          <input type="text" id="units-purchased" class="form-control" name="quantity-bought" aria-label="input" aria-describedby="inputGroup-sizing-sm">
+                        </div> 
+                      <br>
+                      <h5 class="card-title price-sold">$ <%= product.price %></h5>
                     </div>
                   </div>
               <div class="col-lg-8 fs-4">
-               <form action="" method="post">
+               <form action="/checkout" method="post">
+                      <label>First and Last name</label>
 
+                      <div class="input-group mb-5">
+                        <span class="input-group-text">First and last name</span>
+                        <input type="text" aria-label="First name" class="form-control">
+                        <input type="text" aria-label="Last name" class="form-control">
+                      </div>
+
+                      <label>Email</label>
+
+                      <div class="input-group mb-5">
+                        <input type="text" class="form-control" placeholder="sample" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                        <span class="input-group-text" id="basic-addon2">@example.com</span>
+                      </div>
+
+                      <label>Address</label>
+
+                      <div class="input-group flex-nowrap mb-5">
+                        <span class="input-group-text" id="addon-wrapping">Your address here</span>
+                        <input type="text" class="form-control" placeholder="6 Bradley Washington, USA" aria-label="Username" aria-describedby="addon-wrapping">
+                      </div>
+
+                      <label>Please enter credit card details</label>
+
+                      <div class="input-group flex-nowrap mb-5">
+                        <span class="input-group-text" id="addon-wrapping">Card number</span>
+                        <input type="text" class="form-control" placeholder="xxxx xxxx xxxx xx" aria-label="Username" aria-describedby="addon-wrapping">
+                      </div>
                </form>
               </div>
             </div>   
