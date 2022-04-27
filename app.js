@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
+const cardFormat = require(__dirname + '/validatecard.js');
+
 
 
 const app = express();
@@ -25,6 +27,8 @@ products = [
     {productName: 'Big mac', productImage: macImg, price: 75},
     {productName: 'Amazon Tomatoes', productImage: tomatoesImg, price: 190}
 ]
+
+let orders = [];
 
 app.get('/', (req,res) => {
     res.render(__dirname + `/views/home`, {collections : collections, products: products});
@@ -57,6 +61,42 @@ app.get('/checkout/:product', (req,res) => {
     })
 
 })
+
+app.post('/checkout', (req,res) => {
+    let fname = req.body.fname;
+    let lname = req.body.lname;
+    let address = req.body.address;
+    let email = req.body.email;
+    let card = req.body.card;
+    let price = req.body.sellingPrice;
+
+    // package order details
+
+    let order = {
+        fname : fname,
+        lname : lname,
+        address : address,
+        email : email,
+        amount_paid : price,
+    }
+
+    orders.push(order);
+
+    // validate card format
+    let luhnsCheck = cardFormat.luhnsCheck;
+    let validateCardFormat = cardFormat.validateCardFormat;
+
+    if(validateCardFormat(card)) {
+        res.send('<h1> Payment successful </h1>');
+    }else {
+        res.send('<h1> Please enter valid card details </h1>');
+    }
+     /*
+    This implementation is an oversimplication,in reality,to process payments,
+    we would need to connect a payment API and validate the card further.
+    */
+})
+
 
 
 

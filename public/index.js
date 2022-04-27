@@ -4,8 +4,10 @@ const currentPrice = document.getElementsByClassName('price-sold')[0].innerText;
 let price = currentPrice.replace('$', '');
 price = parseInt(price,10);
 const units = document.getElementById('units-purchased');
-units.addEventListener('change', updatePrice); 
-document.addEventListener('keyup', updatePrice);
+
+document.getElementById("hidden-checkout-field").setAttribute('value', price);
+units.addEventListener('change', updatePrice,false); 
+units.addEventListener('keyup', updatePrice, false);
  
 function updatePrice(evt) {
     evt.stopPropagation();
@@ -19,6 +21,9 @@ function updatePrice(evt) {
     }
     let finalPrice = pricePerUnit * unitsPurchased;
     document.getElementsByClassName('price-sold')[0].innerText = '$ ' + finalPrice;
+
+    //dynamically update sellingPrice in checkout form
+    document.getElementById("hidden-checkout-field").setAttribute('value', finalPrice);
 }
 
 
