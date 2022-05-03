@@ -4,11 +4,12 @@
 <h1 class="home-header-text font">All Products</h1>
 
 
-  <div class="home-collections-dashboard-top">Collections
+  <div class="home-collections-dashboard-top">
+    <h4>Collections</h4>
    <% collections.forEach(collection => { %>
-      <div class="home-collections-dashboard-item"><a href="#"><%= collection %></a></div>
+      <div class="home-collections-dashboard-item"><a class="all-cat-link" href="#"><%= collection %></a></div>
  <%   })  %>
-    <div class="home-collections-dashboard-bottom"><a href="#">See all collections...</a></div>
+    <button class="btn btn-sm btn-secondary home-collections-dashboard-bottom"><a class="link-light all-cat-link" href="/categories">See all collections...</a></button>
   </div>
 
   

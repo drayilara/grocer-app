@@ -1,0 +1,39 @@
+<%- include('partials/header') -%>
+
+
+
+<div id="client-cat-container" class="container-fluid">
+    <table class="table table-light table-hover">
+        <thead>
+          <tr>
+            <th scope="col">All categories</th>
+          </tr>
+        </thead>
+      
+        <% collectionAndProduct.forEach(unit => { %>
+          <tbody>
+              <tr>
+                <td colspan="3"><%= unit.collection %> <button class="btn btn-outline-primary btn-sm client-cat-product-count"><%= unit.products.length %></button></td> 
+              </tr>   
+          </tbody>
+      <%  })  %>  
+    </table>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<%- include('partials/footer') -%>

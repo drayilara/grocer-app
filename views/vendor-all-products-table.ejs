@@ -1,0 +1,51 @@
+<%- include('partials/header') -%>
+
+
+<section class="container-fluid vendor-all-products">
+
+    <form action="" method="post" class="vendor-add-a-product-form">
+        <button class="btn btn-sm btn-primary add-product-btn"><a href="#" class="link-light add-product-btn-link">Add a product</a></button>
+    </form>
+
+    <button class="btn btn-sm total-products-btn btn-outline-primary">Total products: <%= products.length %> </button>
+
+    <table class="table table-bordered border-primary">
+        <thead>
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">Image</th>
+            <th scope="col">Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Category</th>
+            <th scope="col">Added on</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+    <% products.forEach(product => { %>
+
+        <tr>
+            <th scope="row"></th>
+            <td><h5><%= product.productName %></h5></td>
+            <td><img src="<%= product.productImage %>" alt="" class="vendor-product-image"></td>
+            <td><h5>$ <%= product.price %></h5></td>
+            <td></td>
+            <td></td>
+            <td>
+                <form action="" method="post" class="vendor-all-products-form">
+                    <button type="submit" name="view" class="btn btn-sm btn-outline-secondary action-item" value="<%= product.id %>"> View </button>
+                    <button type="submit" name="edit" class="btn btn-sm btn-outline-success action-item" value="<%= product.id %>"> Edit </button>
+                    <button type="submit" name="delete" class="btn btn-sm btn-outline-danger action-item" value="<%= product.id %>"> Delete </button>
+                </form>
+            </td>
+          </tr>
+
+  <%  }) %>
+          
+        </tbody>
+      </table>
+
+</section>
+
+
+<%- include('partials/footer') -%>

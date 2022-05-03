@@ -40,6 +40,14 @@ body {
     margin-left : 40px;
 }
 
+.home-collections-dashboard-item {
+    margin : 10px;
+}
+
+.all-cat-link {
+    text-decoration: none;
+}
+
 .home-products-container {
     width : 70vw;
     margin-left : 20vw;
@@ -55,5 +63,56 @@ body {
     margin : 5% 0 5% 5%;
 }
 
-/* checkout page */
+/* client categories page */
+
+.client-cat-product-count {
+    margin-right : 20px;
+}
+
+
+#client-cat-container {
+    width : 80vw;
+    position : relative;
+    top : 10vh;
+}
+
+/* Vendor-all-products */
+
+.vendor-all-products {
+    width : 80vw;
+    margin-top : 10vh;
+}
+
+.add-product-btn-link {
+    text-decoration: none;
+}
+
+.add-product-btn {
+    margin : 2%;
+}
+
+.total-products-btn {
+    position : relative;
+    left : 60%;
+}
+
+.vendor-all-products-form {
+    width : 55%;
+    display : flex;
+    justify-content: space-between;
+    
+}
+
+.vendor-add-a-product-form {
+    display: inline;
+}
+
+.action-item {
+    margin-right : 10px;
+}
+
+.vendor-product-image{
+    width : 100px;
+    margin-left: 10px;
+}
 

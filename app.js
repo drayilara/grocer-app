@@ -10,7 +10,9 @@ app.use(bodyParser.urlencoded({extended : true}));
 app.use(express.static(__dirname + '/public')); 
 app.set('view engine', 'ejs');
 
-let collections = ['Beverages', 'Vegetables', 'Dairy'];
+//Dummy dataset
+
+let collections = ['Beverages', 'Vegetables', 'Children'];
 
 let babyoilImg = '/images/baby-products/baby-1.jpg';
 let babyharnessImg = '/images/baby-products/baby-2.webp';
@@ -19,13 +21,19 @@ let cheeseImg ='/images/dairy/dairy-1.jpg';
 let macImg = '/images/fast-food/fast-food-1.jpg';
 let tomatoesImg = '/images/fruits-vegetables/fruits-2.webp';
 
-products = [
+let products = [
     {productName: 'Johnson baby oil', productImage: babyoilImg, price: 100},
     {productName: 'Johns baby harness', productImage: babyharnessImg, price: 200},
     {productName: 'Coastal Juice', productImage: juiceImg, price: 150},
     {productName: 'Heavenly cheese', productImage: cheeseImg, price: 80},
     {productName: 'Big mac', productImage: macImg, price: 75},
     {productName: 'Amazon Tomatoes', productImage: tomatoesImg, price: 190}
+]
+
+let collectionAndProduct = [
+    {collection : 'Beverages', products : ['Coastal Juice']},
+    {collection : 'Children', products : ['Johns baby harness', 'Johnson baby oil']},
+    {collection : 'Vegetables', products : ['Amazon tomatoes']}
 ]
 
 let orders = [];
@@ -93,12 +101,22 @@ app.post('/checkout', (req,res) => {
     }
      /*
     This implementation is an oversimplication,in reality,to process payments,
-    we would need to connect a payment API and validate the card further.
+    we would need to connect a payment gateway and validate the card further.
     */
 })
 
+app.get('/categories', (req,res) => {
+    res.render(__dirname + '/views/client-cat-page', {collectionAndProduct : collectionAndProduct});
+})
 
+app.get('/vendor-all-products', (req,res) => {
 
+    res.render(__dirname + '/views/vendor-all-products-table', {products: products});
+})
+
+app.get('/vendor-add-product', (req,res) => {
+    res.render()
+})
 
 
 

@@ -1,6 +1,6 @@
 
-/*  Card format validation is done using the luhns algorithm : https://www.youtube.com/watch?v=PNXXqzU4YnM
-Luhns only validates format of the card
+/*  credit card format validation is done using the luhns algorithm : https://www.youtube.com/watch?v=PNXXqzU4YnM
+Luhns only validates format of the card.In 2021,a package was released that can do the same thing,its based on Luhn.
 We must use an API to connect with a payment gateway to check:
 card status
 process payment
