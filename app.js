@@ -1,13 +1,23 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
+const path = require('path');
 const cardFormat = require(__dirname + '/validatecard.js');
+const multer = require('multer');
+const fs = require('fs')
+const encode = require('node-base64-image').encode;
+const decode = require('node-base64-image').decode;
 
 
 
 const app = express();
+
+
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(express.static(__dirname + '/public')); 
+
+const upload = multer({dest : path.join(__dirname, '/public/uploads/')});
+
 app.set('view engine', 'ejs');
 
 //Dummy dataset
@@ -110,36 +120,20 @@ app.get('/categories', (req,res) => {
 })
 
 app.get('/vendor-all-products', (req,res) => {
-
     res.render(__dirname + '/views/vendor-all-products-table', {products: products});
 })
 
-app.get('/vendor-add-product', (req,res) => {
-    res.render()
-})
+app.route('/vendor-add-product')
+    .get((req,res) => {
+        res.render(__dirname + '/views/vendor-addProduct-form')
+    })
+    
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+app.post('/vendor-add-product', upload.single('imageFile'),  (req,res) => {
+     
+        res.end()
+    })
 
 
 

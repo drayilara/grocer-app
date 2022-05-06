@@ -3,7 +3,27 @@
 
 
 
+<form action="/vendor-add-product" enctype="multipart/form-data"  method="post">
 
+    <input type="hidden" name="productId">
+
+    <input type="hidden" name="dateAdded">
+
+    <label for="">Name of Product</label><br>
+    <input type="text" name="productName" required><br>
+
+    <label for="">Price</label><br>
+    <input type="text" name="productPrice" required><br>
+
+    <label for="">Category</label><br>
+    <input type="text" name="category" required><br>
+
+    <label for="">Upload Image</label><br>
+    <input type="file" name="imageFile" required><br>
+    <br>
+    <button type="submit">Submit</button>
+    
+</form>
 
 
 

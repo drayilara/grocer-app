@@ -35,10 +35,8 @@ function luhnsCheck(card){
          numberAtOdd = numberArr[i];
          cumSum = cumSum + numberAtOdd;
        }
-       
       i++;
     }
- 
     if(cumSum % 2 == 0) {
        return true;
     }
