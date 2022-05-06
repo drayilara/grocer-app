@@ -5,9 +5,6 @@ const path = require('path');
 const cardFormat = require(__dirname + '/validatecard.js');
 const multer = require('multer');
 const fs = require('fs')
-const encode = require('node-base64-image').encode;
-const decode = require('node-base64-image').decode;
-
 
 
 const app = express();
@@ -16,7 +13,40 @@ const app = express();
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(express.static(__dirname + '/public')); 
 
-const upload = multer({dest : path.join(__dirname, '/public/uploads/')});
+// Set The Storage Engine
+const storage = multer.diskStorage({
+    destination: './public/uploads/',
+    filename: function(req, file, cb){
+      cb(null,file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+  });
+
+// Init Upload
+const upload = multer({
+    storage: storage,
+    limits:{fileSize: 1000000},
+    fileFilter: function(req, file, cb){
+      checkFileType(file, cb);
+    }
+  }).single('imageFile');
+
+// Check File Type
+function checkFileType(file, cb){
+    // Allowed ext
+    const filetypes = /jpeg|jpg|png|gif/;
+    // Check ext
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    // Check mime
+    const mimetype = filetypes.test(file.mimetype);
+  
+    if(mimetype && extname){
+      return cb(null,true);
+    } else {
+      cb('Error: Images Only!');
+    }
+  }
+
+
 
 app.set('view engine', 'ejs');
 
@@ -123,19 +153,37 @@ app.get('/vendor-all-products', (req,res) => {
     res.render(__dirname + '/views/vendor-all-products-table', {products: products});
 })
 
-app.route('/vendor-add-product')
+app.route('/vendor-add-product') 
     .get((req,res) => {
-        res.render(__dirname + '/views/vendor-addProduct-form')
-    })
+    let status = '';
+    res.render(__dirname + '/views/vendor-addProduct-form', {status : status})
+})
+    .post((req, res) => {
+    let status;
+    upload(req, res, (err) => {
+    if(err){
+        status = err.message
+    } else {
+      if(req.file == undefined){
+        status = 'Please upload a file';
+      } else {
+        status = 'Uploaded succesfully';  
+      }
+    }
+
+    // bundle payload
+    const payload = {
+        productName : req.body.productName,
+        imageUrl : path.join('/uploads/', req.file.filename),
+        price : req.body.productPrice,
+        vendor : req.body.vendor,
+        category : req.body.category,
+        date : new Date.toLocaleDateString('en-GB')
+    }
     
-
-
-app.post('/vendor-add-product', upload.single('imageFile'),  (req,res) => {
-     
-        res.end()
-    })
-
-
+    res.render(__dirname + '/views/vendor-addProduct-form', {status : status});
+  });
+});
 
 
 
