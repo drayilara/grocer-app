@@ -118,7 +118,7 @@ app.post('/checkout', (req,res) => {
     let card = req.body.card;
     let price = req.body.sellingPrice;
 
-    // package order details
+    // bundle order payload
 
     let order = {
         fname : fname,
@@ -150,8 +150,10 @@ app.get('/categories', (req,res) => {
 })
 
 app.get('/vendor-all-products', (req,res) => {
-    res.render(__dirname + '/views/vendor-all-products-table', {products: products});
+    let rowCount = 0;
+    res.render(__dirname + '/views/vendor-all-products-table', {products: products, rowCount: rowCount});
 })
+
 
 app.route('/vendor-add-product') 
     .get((req,res) => {
@@ -171,6 +173,8 @@ app.route('/vendor-add-product')
       }
     }
 
+    const date = new Date();
+
     // bundle payload
     const payload = {
         productName : req.body.productName,
@@ -178,12 +182,35 @@ app.route('/vendor-add-product')
         price : req.body.productPrice,
         vendor : req.body.vendor,
         category : req.body.category,
-        date : new Date.toLocaleDateString('en-GB')
-    }
-    
+        date : date.toLocaleDateString('en-GB', {year:"numeric",month:"2-digit", day:"2-digit"})
+    } 
     res.render(__dirname + '/views/vendor-addProduct-form', {status : status});
   });
 });
+
+app.route('/vendor/categories')
+  .get((req,res) => {
+    let rowCount = 0
+    res.render( __dirname + '/views/vendor-all-cat', {collectionAndProduct: collectionAndProduct, rowCount: rowCount});
+  })
+
+  .post((req,res) => {
+    let status = ""
+    res.render(__dirname + '/views/vendor-addCat-form', {status:status});
+  })
+
+app.post('/vendor/createCategory', (req,res) => {
+  let newCat = req.body.categoryName;
+  let date = new Date();
+
+  // payload
+  let category = {
+    categoryName : newCat,
+    dateCreated : date.toLocaleDateString('en-GB', {year:"numeric",month:"2-digit", day:"2-digit"})
+  }
+  let status = "Successfully created";
+  res.render(__dirname + '/views/vendor-addCat-form', {status:status});
+})
 
 
 

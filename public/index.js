@@ -1,4 +1,6 @@
-// dynamically generates price of products based on quantity ordered on checkout page
+/* dynamically generates price of products based on quantity ordered on checkout page
+Links with the product checkout page
+*/
 
 const currentPrice = document.getElementsByClassName('price-sold')[0].innerText;
 let price = currentPrice.replace('$', '');
@@ -25,5 +27,9 @@ function updatePrice(evt) {
     //dynamically update sellingPrice in checkout form
     document.getElementById("hidden-checkout-field").setAttribute('value', finalPrice);
 }
+
+
+
+
 
 

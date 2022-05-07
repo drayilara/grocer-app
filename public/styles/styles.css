@@ -116,5 +116,12 @@ body {
     margin-left: 10px;
 }
 
+/* Vendor-add-product */
 
+.vendorAddProductForm {
+    display : flex;
+    justify-content: center;
+    align-content: center;
+    margin-top : 15vh;
+}
 

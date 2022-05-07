@@ -25,9 +25,9 @@
     <% products.forEach(product => { %>
 
         <tr>
-            <th scope="row"></th>
-            <td><h5><%= product.productName %></h5></td>
+            <th scope="row" id="vendorAllProductCounter"> <%= ++rowCount %></th>
             <td><img src="<%= product.productImage %>" alt="" class="vendor-product-image"></td>
+            <td><h5><%= product.productName %></h5></td>
             <td><h5>$ <%= product.price %></h5></td>
             <td></td>
             <td></td>

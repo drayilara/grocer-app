@@ -1,0 +1,21 @@
+<%- include('partials/header') -%>
+
+
+<section class="container-fluid vendorAddProductForm">
+
+    <form action='/vendor/createCategory'  method="post">
+        <h3>New category</h3><br>
+        <h4><%= status %></h4>
+        <label for="" class="form-label">Name of category</label>
+        <input type="text" class="form-control" name="categoryName" required>
+        <br>
+        <button type="submit" class="btn btn-md btn-primary" >Create</button>
+       
+    </form>
+    
+</section>
+
+
+
+
+<%- include('partials/footer') -%>

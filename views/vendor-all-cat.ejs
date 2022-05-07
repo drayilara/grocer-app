@@ -1,0 +1,52 @@
+<%- include('partials/header') -%>
+
+<section class="container-fluid vendor-all-products">
+    
+    <form action="/vendor/categories" method="POST" class="vendor-add-a-product-form">
+        <button type="submit" class="btn btn-sm btn-primary add-product-btn">Add a category</button>
+    </form>
+    
+
+    <button class="btn btn-sm total-products-btn btn-outline-primary">Total collections: <%= collectionAndProduct.length %> </button>
+
+    <table class="table table-bordered border-primary vendor-table">
+        <thead>
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Products</th>
+            <th scope="col">Created on</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+    <% collectionAndProduct.forEach(collection => { %>
+    
+        <tr>
+            <th scope="row"> <%= ++rowCount %></th>
+            <td><h5><%= collection.collection %></h5></td>
+            <td><h5><%= collection.products.length %></h5></td>
+            <td></td>
+            <td>
+                <form action="" method="post" class="vendor-all-products-form">
+                    <button type="submit" name="view" class="btn btn-sm btn-outline-secondary action-item" value="<%= collection.id %>"> View </button>
+                    <button type="submit" name="edit" class="btn btn-sm btn-outline-success action-item" value="<%= collection.id %>"> Edit </button>
+                    <button type="submit" name="delete" class="btn btn-sm btn-outline-danger action-item" value="<%= collection.id %>"> Delete </button>
+                </form>
+            </td>
+          </tr>
+    
+    <%  }) %>
+          
+        </tbody>
+      </table>
+</section>
+
+
+
+
+
+
+
+
+<%- include('partials/footer') -%>

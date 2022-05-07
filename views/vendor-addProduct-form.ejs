@@ -1,51 +1,36 @@
 <%- include('partials/header') -%>
 
 
+<section class="container-fluid vendorAddProductForm">
 
+       
 
-<form action="/vendor-add-product" enctype="multipart/form-data"  method="post">
-
+    <form action="/vendor-add-product" enctype="multipart/form-data"  method="post">
+        <h3>Add a new product</h3><br>
+        <label for="" class="form-label">Name of Product</label>
+        <input type="text" class="form-control" name="productName" required>
+    
+        <label for="" class="form-label">Price</label>
+        <input type="text" class="form-control" name="productPrice" required>
+    
+        <label for="" class="form-label">Category</label>
+        <input type="text" class="form-control" name="category" required>
+        
+        <label for="" class="form-label">Upload Image</label>
+        <input type="file" class="form-control" name="imageFile"  class="form-control" required>
+       
+    
+        <label for="" class="form-label">Vendor</label>
+        <input type="text" class="form-control" name="vendor" required>
+        <br>
+        <button type="submit" class="btn btn-md btn-primary" >Upload</button>
+    
+        <h3><%= status %></h3>
+        
+    </form>
     
 
-    <label for="">Name of Product</label><br>
-    <input type="text" name="productName" required><br>
-
-    <label for="">Price</label><br>
-    <input type="text" name="productPrice" required><br>
-
-    <label for="">Category</label><br>
-    <input type="text" name="category" required><br>
-    <br>
-    <label for="">Upload Image</label><br>
-    <input type="file" name="imageFile" required><br>
-    <br>
-
-    <label for="">Vendor</label><br>
-    <input type="text" name="vendor" required><br>
-    <br>
-
-
-    <button type="submit">Submit</button>
-
-    <h1><%= status %></h1>
-    
-</form>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+</section>
 
 
 
