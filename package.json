@@ -1,7 +1,7 @@
 {
   "name": "grocer-app",
   "version": "1.0.0",
-  "description": "An ecommerce site multiple sellers",
+  "description": "An e-commerce site for multiple sellers",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -20,7 +20,7 @@
     "body-parser": "^1.20.0",
     "ejs": "^3.1.7",
     "express": "^4.17.3",
-    "multer": "^1.4.4",
-    "node-base64-image": "^2.0.4"
+    "mongoose": "^6.3.2",
+    "multer": "^1.4.4"
   }
 }

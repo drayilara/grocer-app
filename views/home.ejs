@@ -9,7 +9,7 @@
    <% collections.forEach(collection => { %>
       <div class="home-collections-dashboard-item"><a class="all-cat-link" href="#"><%= collection %></a></div>
  <%   })  %>
-    <button class="btn btn-sm btn-secondary home-collections-dashboard-bottom"><a class="link-light all-cat-link" href="/categories">See all collections...</a></button>
+    <button class="btn btn-sm btn-secondary home-collections-dashboard-bottom"><a class="link-light all-cat-link" href="/client/categories">See all collections...</a></button>
   </div>
 
   
@@ -27,7 +27,7 @@
             <h5 class="card-title"><%= product.productName %></h5>
             <p class="card-text">Vendor:</p>
             <p class="card-text">$ <%= product.price %></p>
-            <a href="/view-product/<%= product.productName %>" class="btn btn-primary">Buy Now</a>
+            <a href="/client/viewProduct/<%= product.productName %>" class="btn btn-primary">Buy Now</a>
           </div>
         </div>
     </div>

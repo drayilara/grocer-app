@@ -1,54 +1,29 @@
+// Init
 const express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
 const path = require('path');
-const cardFormat = require(__dirname + '/validatecard.js');
-const multer = require('multer');
-const fs = require('fs')
+const fs = require('fs');
 
+// Load custom modules
+const validateCard = require(__dirname + '/custom_modules/validatecard.js');
+const db = require(__dirname + '/custom_modules/db.js');
+const upload = require(__dirname + '/custom_modules/fileupload.js');
 
-const app = express();
+// Create server
+const app = express(); 
 
+// template engine
+app.set('view engine', 'ejs');
 
+// app-level middleware
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(express.static(__dirname + '/public')); 
 
-// Set The Storage Engine
-const storage = multer.diskStorage({
-    destination: './public/uploads/',
-    filename: function(req, file, cb){
-      cb(null,file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
-  });
-
-// Init Upload
-const upload = multer({
-    storage: storage,
-    limits:{fileSize: 1000000},
-    fileFilter: function(req, file, cb){
-      checkFileType(file, cb);
-    }
-  }).single('imageFile');
-
-// Check File Type
-function checkFileType(file, cb){
-    // Allowed ext
-    const filetypes = /jpeg|jpg|png|gif/;
-    // Check ext
-    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-    // Check mime
-    const mimetype = filetypes.test(file.mimetype);
-  
-    if(mimetype && extname){
-      return cb(null,true);
-    } else {
-      cb('Error: Images Only!');
-    }
-  }
-
-
-
-app.set('view engine', 'ejs');
+// connect to db
+db.connectToDB();
+const Categories = db.Categories;
+const Orders = db.Orders
 
 //Dummy dataset
 
@@ -76,14 +51,14 @@ let collectionAndProduct = [
     {collection : 'Vegetables', products : ['Amazon tomatoes']}
 ]
 
-let orders = [];
+
 
 app.get('/', (req,res) => {
     res.render(__dirname + `/views/home`, {collections : collections, products: products});
 });
 
 
-app.get('/view-product/:product', (req,res) => {
+app.get('/client/viewProduct/:product', (req,res) => {
     let productName = req.params.product;
     let clickedProduct = products.filter(product => {
         if(product.productName == productName){
@@ -92,11 +67,11 @@ app.get('/view-product/:product', (req,res) => {
     })
 
     clickedProduct.forEach(product => {
-        res.render(__dirname + '/views/product-description', {product: product});
+        res.render(__dirname + '/views/productDescription', {product: product});
     })
 })
 
-app.get('/checkout/:product', (req,res) => {
+app.get('/client/productDescription/:product', (req,res) => {
     let productName = req.params.product;
     let clickedProduct = products.filter(product => {
         if(product.productName == productName){
@@ -105,36 +80,35 @@ app.get('/checkout/:product', (req,res) => {
     });
 
     clickedProduct.forEach(product => {
-        res.render(__dirname + '/views/checkout', {product: product});
+        res.render(__dirname + '/views/checkoutForm', {product: product});
     })
 
 })
 
-app.post('/checkout', (req,res) => {
+app.post('/client/checkout', (req,res) => {
     let fname = req.body.fname;
     let lname = req.body.lname;
     let address = req.body.address;
     let email = req.body.email;
     let card = req.body.card;
-    let price = req.body.sellingPrice;
+    let priceSold = Number(req.body.sellingPrice);
+    let date = new Date();
+    date = date.toLocaleDateString('en-GB', {year : 'numeric', month: '2-digit', day : '2-digit'});
 
-    // bundle order payload
+    // const order = {
+    //   fname : fname,
+    //   lname : lname,
+    //   email : email,
+    //   address : address,
+    //   productCategory,
+    //   productID,
+    //   dateOfPurchase : date,
+    //   cardDetails : card,
+    //   price : priceSold,
+    // }
 
-    let order = {
-        fname : fname,
-        lname : lname,
-        address : address,
-        email : email,
-        amount_paid : price,
-    }
-
-    orders.push(order);
-
-    // validate card format
-    let luhnsCheck = cardFormat.luhnsCheck;
-    let validateCardFormat = cardFormat.validateCardFormat;
-
-    if(validateCardFormat(card)) {
+    // validateCard from criticalModules/validateCard.js
+    if(validateCard(card)) {
         res.send('<h1> Payment successful </h1>');
     }else {
         res.send('<h1> Please enter valid card details </h1>');
@@ -145,20 +119,20 @@ app.post('/checkout', (req,res) => {
     */
 })
 
-app.get('/categories', (req,res) => {
-    res.render(__dirname + '/views/client-cat-page', {collectionAndProduct : collectionAndProduct});
+app.get('/client/categories', (req,res) => {
+    res.render(__dirname + '/views/clientCategoriesTable', {collectionAndProduct : collectionAndProduct});
 })
 
-app.get('/vendor-all-products', (req,res) => {
+app.get('/admin/allProducts', (req,res) => {
     let rowCount = 0;
-    res.render(__dirname + '/views/vendor-all-products-table', {products: products, rowCount: rowCount});
+    res.render(__dirname + '/views/adminAllProductTable', {products: products, rowCount: rowCount});
 })
 
 
-app.route('/vendor-add-product') 
+app.route('/admin/addProduct') 
     .get((req,res) => {
     let status = '';
-    res.render(__dirname + '/views/vendor-addProduct-form', {status : status})
+    res.render(__dirname + '/views/adminAddProduct', {status : status})
 })
     .post((req, res) => {
     let status;
@@ -173,44 +147,58 @@ app.route('/vendor-add-product')
       }
     }
 
-    const date = new Date();
+    let date = new Date();
+    date = date.toLocaleDateString('en-GB', {year:"numeric",month:"2-digit", day:"2-digit"});
 
-    // bundle payload
-    const payload = {
-        productName : req.body.productName,
+    let category = req.body.category;
+
+    const newProduct = {
+        name : req.body.productName,
         imageUrl : path.join('/uploads/', req.file.filename),
-        price : req.body.productPrice,
+        price : Number(req.body.productPrice),
         vendor : req.body.vendor,
-        category : req.body.category,
-        date : date.toLocaleDateString('en-GB', {year:"numeric",month:"2-digit", day:"2-digit"})
+        dateCreated : date
     } 
-    res.render(__dirname + '/views/vendor-addProduct-form', {status : status});
+    res.render(__dirname + '/views/adminAddProduct', {status : status});
   });
 });
 
-app.route('/vendor/categories')
+
+
+app.route('/admin/categories')
   .get((req,res) => {
     let rowCount = 0
-    res.render( __dirname + '/views/vendor-all-cat', {collectionAndProduct: collectionAndProduct, rowCount: rowCount});
+    res.render( __dirname + '/views/adminCategories', {collectionAndProduct: collectionAndProduct, rowCount: rowCount});
   })
 
   .post((req,res) => {
     let status = ""
-    res.render(__dirname + '/views/vendor-addCat-form', {status:status});
+    res.render(__dirname + '/views/adminAddCategory', {status:status});
   })
 
-app.post('/vendor/createCategory', (req,res) => {
+
+
+app.post('/admin/createCategory', async (req,res) => {
   let newCat = req.body.categoryName;
   let date = new Date();
+  date =  date.toLocaleDateString('en-GB', {year:"numeric",month:"2-digit", day:"2-digit"});
 
-  // payload
-  let category = {
-    categoryName : newCat,
-    dateCreated : date.toLocaleDateString('en-GB', {year:"numeric",month:"2-digit", day:"2-digit"})
+  let newCategory = {
+    category : newCat,
+    dateCreated : date
   }
-  let status = "Successfully created";
-  res.render(__dirname + '/views/vendor-addCat-form', {status:status});
-})
+
+  let status;
+
+  try{
+    await Categories.create(newCategory)
+    status = "Successfully created";
+  }catch(err){
+    status = `An error occured: ${err.message}`
+    console.log(`Error: ${err.message}`);
+  }
+  res.render(__dirname + '/views/adminAddCategory', {status:status});
+});
 
 
 
