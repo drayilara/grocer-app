@@ -2,13 +2,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
-const path = require('path');
-const fs = require('fs');
 
-// Load custom modules
-const validateCard = require('./custom_modules/validatecard.js');
+// Load needed custom modules
 const db = require('./custom_modules/db.js');
-const upload = require('./custom_modules/fileupload.js');
 
 // Get Routers
 const clientRouter = require('./routes/client.js');
@@ -31,7 +27,6 @@ app.use('/admin', adminRouter);
 // connect to db
 db.connectToDB();
 const Categories = db.Categories;
-const Orders = db.Orders
 
 //Dummy dataset
 
@@ -53,11 +48,10 @@ let products = [
     {productName: 'Amazon Tomatoes', productImage: tomatoesImg, price: 190}
 ]
 
-
-
 app.get('/', (req,res) => {
-    res.render(__dirname + `/views/home`, {collections : collections, products: products});
+    res.render(`home`, {collections : collections, products: products});
 });
+
 
 
 

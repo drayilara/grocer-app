@@ -1,3 +1,6 @@
+// Load needed custom module
+const validateCard = require("../custom_modules/validatecard.js");
+
 
 // Dummy data
 let collections = ['Beverages', 'Vegetables', 'Children'];
@@ -78,7 +81,6 @@ const checkout =  (req,res) => {
     //   price : priceSold,
     // }
 
-    // validateCard from criticalModules/validateCard.js
     if(validateCard(card)) {
         res.send('<h1> Payment successful </h1>');
     }else {

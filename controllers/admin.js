@@ -1,3 +1,11 @@
+// load needed custom module
+const upload = require("../custom_modules/fileupload.js");
+const db = require('../custom_modules/db.js');
+// Lodash
+const _ = require('lodash');
+
+// Get Models
+const Categories = db.Categories
 
 
 // Dummy data
@@ -55,12 +63,15 @@ const addProductPOST = (req, res) => {
     date = date.toLocaleDateString('en-GB', {year:"numeric",month:"2-digit", day:"2-digit"});
 
     let category = req.body.category;
+    category = _.capitalize(category);
 
+    // search for category in the db and push newProduct on to it.If category doesn't exist,redirect to /admin/addCategory
+    
     const newProduct = {
-        name : req.body.productName,
+        name : _.capitalize(req.body.productName),
         imageUrl : path.join('/uploads/', req.file.filename),
         price : Number(req.body.productPrice),
-        vendor : req.body.vendor,
+        vendor : _.capitalize(req.body.vendor),
         dateCreated : date
     } 
     res.render('../views/adminAddProduct', {status : status});
@@ -78,7 +89,7 @@ const categoriesPOST = (req,res) => {
 }
 
 const createCategory =  async (req,res) => {
-    let newCat = req.body.categoryName;
+    let newCat = _.capitalize(req.body.categoryName);
     let date = new Date();
     date =  date.toLocaleDateString('en-GB', {year:"numeric",month:"2-digit", day:"2-digit"});
   
