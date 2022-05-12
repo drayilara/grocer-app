@@ -28,8 +28,10 @@ app.use('/admin', adminRouter);
 db.connectToDB();
 const Categories = db.Categories;
 
-//Dummy dataset
+// connect to server
+connectToServer();
 
+//Dummy dataset
 let collections = ['Beverages', 'Vegetables', 'Children'];
 
 let babyoilImg = '/images/baby-products/baby-1.jpg';
@@ -55,5 +57,13 @@ app.get('/', (req,res) => {
 
 
 
-const port = 3000;
-app.listen(port, () => console.log('Web server is running on port ' + port));
+
+
+
+
+async function connectToServer() {
+    const PORT = 3000;
+    await app.listen(PORT, () => console.log('Web server is running on port ' + PORT));
+}
+
+

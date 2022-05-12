@@ -3,6 +3,8 @@ const upload = require("../custom_modules/fileupload.js");
 const db = require('../custom_modules/db.js');
 // Lodash
 const _ = require('lodash');
+// Faker
+const faker = require('faker');
 
 // Get Models
 const Categories = db.Categories
@@ -46,7 +48,7 @@ const addProductGET = (req,res) => {
     res.render('../views/adminAddProduct', {status : status})
 }
 
-const addProductPOST = (req, res) => {
+const addProductPOST = async (req, res) => {
     let status;
     upload(req, res, (err) => {
     if(err){
@@ -57,25 +59,44 @@ const addProductPOST = (req, res) => {
       } else {
         status = 'Uploaded succesfully';  
       }
-    }
+    }});
 
     let date = new Date();
     date = date.toLocaleDateString('en-GB', {year:"numeric",month:"2-digit", day:"2-digit"});
 
     let category = req.body.category;
     category = _.capitalize(category);
-
-    // search for category in the db and push newProduct on to it.If category doesn't exist,redirect to /admin/addCategory
     
+    // Actual user data
+
     const newProduct = {
         name : _.capitalize(req.body.productName),
+        description : _.capitalize(description),
         imageUrl : path.join('/uploads/', req.file.filename),
         price : Number(req.body.productPrice),
         vendor : _.capitalize(req.body.vendor),
         dateCreated : date
     } 
+
+    /* fake data from faker.js
+
+    const newProduct = {
+      name : _.capitalize(faker.commerce.productName()),
+      description : faker.commerce.productDescription(),
+      imageUrl : faker.image.fashion(),
+      price : Number(faker.commerce.price()),
+      vendor : _.capitalize(faker.name.findName()),
+      dateCreated : date
+    }
+
+    */
+
+    const query = {category : "Automotive"}
+    const update = {$push : {products : newProduct}}
+
+    const updatedDocument = await Categories.findOneAndUpdate(query, update, {new : true});
+
     res.render('../views/adminAddProduct', {status : status});
-  });
 }
 
 const categoriesGET = (req,res) => {
@@ -93,10 +114,20 @@ const createCategory =  async (req,res) => {
     let date = new Date();
     date =  date.toLocaleDateString('en-GB', {year:"numeric",month:"2-digit", day:"2-digit"});
   
+    // Actual user data
+
     let newCategory = {
       category : newCat,
       dateCreated : date
     }
+
+
+    // Use faker to generate data for production
+
+    // let newCategory = {
+    //   category : faker.commerce.department(),
+    //   dateCreated : date
+    // }
   
     let status;
   

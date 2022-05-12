@@ -17,9 +17,11 @@
   },
   "homepage": "https://github.com/drayilara/grocer-app#readme",
   "dependencies": {
+    "@faker-js/faker": "^6.3.1",
     "body-parser": "^1.20.0",
     "ejs": "^3.1.7",
     "express": "^4.17.3",
+    "faker": "^5.5.3",
     "lodash": "^4.17.21",
     "mongoose": "^6.3.2",
     "multer": "^1.4.4"

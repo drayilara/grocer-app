@@ -5,23 +5,26 @@
 
        
 
-    <form action="/vendor-add-product" enctype="multipart/form-data"  method="post">
+    <form action="/admin/addProduct" enctype="multipart/form-data"  method="post">
         <h3>Add a new product</h3><br>
         <label for="" class="form-label">Name of Product</label>
-        <input type="text" class="form-control" name="productName" required>
+        <input type="text" class="form-control" name="productName">
     
         <label for="" class="form-label">Price</label>
-        <input type="text" class="form-control" name="productPrice" required>
+        <input type="text" class="form-control" name="productPrice">
     
         <label for="" class="form-label">Category</label>
-        <input type="text" class="form-control" name="category" required>
+        <input type="text" class="form-control" name="category">
+
+        <label for="" class="form-label">Product Description</label>
+        <input type="text" class="form-control" name="description">
         
         <label for="" class="form-label">Upload Image</label>
-        <input type="file" class="form-control" name="imageFile"  class="form-control" required>
+        <input type="file" class="form-control" name="imageFile"  class="form-control">
        
     
         <label for="" class="form-label">Vendor</label>
-        <input type="text" class="form-control" name="vendor" required>
+        <input type="text" class="form-control" name="vendor">
         <br>
         <button type="submit" class="btn btn-md btn-primary" >Upload</button>
     

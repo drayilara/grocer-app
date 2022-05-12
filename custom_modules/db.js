@@ -68,6 +68,11 @@ const productSchema = new mongoose.Schema({
       required : [1, 'Every product must have a name']
     },
 
+    description : {
+      type : String,
+      required : [1, 'Please enter the product description']
+    },
+
     price : {
       type : Number,
       required : [1, 'Every product must have a price']
