@@ -7,7 +7,7 @@
   <div class="home-collections-dashboard-top">
     <h4>Collections</h4>
    <% collections.forEach(collection => { %>
-      <div class="home-collections-dashboard-item"><a class="all-cat-link" href="#"><%= collection %></a></div>
+      <div class="home-collections-dashboard-item"><a class="all-cat-link" href="#"><%= collection.category %></a></div>
  <%   })  %>
     <button class="btn btn-sm btn-secondary home-collections-dashboard-bottom"><a class="link-light all-cat-link" href="/client/categories">See all collections...</a></button>
   </div>
@@ -22,12 +22,12 @@
  <% products.forEach(product => { %>
     <div class="col-lg-3 col-md-6 col-sm home-product-item">
       <div class="card p-1 border custom-card-box-shadow" style="width: 18rem;">
-          <img src=<%= product.productImage %> class="card-img-top custom-card-img-styles" alt=<%= product.productName %>>
+          <img src=<%= product.imageUrl %> class="card-img-top custom-card-img-styles" alt=<%= product.imageUrl %>>
           <div class="card-body">
-            <h5 class="card-title"><%= product.productName %></h5>
-            <p class="card-text">Vendor:</p>
+            <h5 class="card-title"><%= product.name %></h5>
+            <p class="card-text">Vendor: <%= product.vendor %></p>
             <p class="card-text">$ <%= product.price %></p>
-            <a href="/client/viewProduct/<%= product.productName %>" class="btn btn-primary">Buy Now</a>
+            <a href="/client/viewProduct/<%= product._id %>" class="btn btn-primary">Buy Now</a>
           </div>
         </div>
     </div>

@@ -15,16 +15,16 @@
         <div class="container-fluid py-5">
             <div class="row">
                 <div class="card col-lg-4" style="width: 20rem;">
-                    <img src=<%= product.productImage %> class="card-img-top" alt="product.productName"><br>
+                    <img src=<%= product.imageUrl %> class="card-img-top" alt="product.name"><br>
                     <div class="card-body">
                       <h5 class="card-title">$ <%= product.price %></h5><br>
-                      <a href="/client/productDescription/<%= product.productName %>" class="btn btn-danger btn-lg">Checkout</a>
+                      <a href="/client/productDescription/<%= product._id %>" class="btn btn-danger btn-lg">Checkout</a>
                     </div>
                   </div>
               <div class="col-lg-8 fs-4">
-                <h2><%= product.productName %></h2><br>
-                <p>Using a series of utilities, you can create this jumbotron, just like the one in previous versions of Bootstrap. Check out the examples below for how you can remix and restyle it to your liking.</p><br>
-                <em>Vendor:</em>
+                <h2><%= product.name %></h2><br>
+                <p><%= product.description %></p><br>
+                <em>Vendor: <%= product.vendor %></em>
               </div>
             </div>   
         </div>

@@ -10,10 +10,10 @@
           </tr>
         </thead>
       
-        <% collectionAndProduct.forEach(unit => { %>
+        <% categories.forEach(category => { %>
           <tbody>
               <tr>
-                <td colspan="3"><%= unit.collection %> <button class="btn btn-outline-primary btn-sm client-cat-product-count"><%= unit.products.length %></button></td> 
+                <td colspan="3"><%= category.category %> <button class="btn btn-outline-primary btn-sm client-cat-product-count"><%= category.products.length %></button></td> 
               </tr>   
           </tbody>
       <%  })  %>  

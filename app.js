@@ -20,7 +20,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(express.static(__dirname + '/public')); 
 
-// Load Routers
+// Mount Routers
 app.use('/client', clientRouter);
 app.use('/admin', adminRouter);
 
@@ -31,33 +31,18 @@ const Categories = db.Categories;
 // connect to server
 connectToServer();
 
-//Dummy dataset
-let collections = ['Beverages', 'Vegetables', 'Children'];
 
-let babyoilImg = '/images/baby-products/baby-1.jpg';
-let babyharnessImg = '/images/baby-products/baby-2.webp';
-let juiceImg = '/images/beverages/bev-img-1.jpg';
-let cheeseImg ='/images/dairy/dairy-1.jpg';
-let macImg = '/images/fast-food/fast-food-1.jpg';
-let tomatoesImg = '/images/fruits-vegetables/fruits-2.webp';
-
-let products = [
-    {productName: 'Johnson baby oil', productImage: babyoilImg, price: 100},
-    {productName: 'Johns baby harness', productImage: babyharnessImg, price: 200},
-    {productName: 'Coastal Juice', productImage: juiceImg, price: 150},
-    {productName: 'Heavenly cheese', productImage: cheeseImg, price: 80},
-    {productName: 'Big mac', productImage: macImg, price: 75},
-    {productName: 'Amazon Tomatoes', productImage: tomatoesImg, price: 190}
-]
-
-app.get('/', (req,res) => {
-    res.render(`home`, {collections : collections, products: products});
-});
-
-
-
-
-
+app.get('/', async (req,res) => {
+    // Get All products and categories from db
+        await Categories.find({}, (err, collections) => {
+        if(err) res.send(`Error: ${err.message}`)
+        let products;
+        if(collections) {  
+           products = collections.reduce((accumulator, currentCategory) => accumulator.concat(currentCategory.products),[]);
+        } 
+        res.render(`home`, {collections : collections, products: products});
+     })
+    })
 
 
 

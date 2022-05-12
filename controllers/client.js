@@ -1,62 +1,52 @@
 // Load needed custom module
 const validateCard = require("../custom_modules/validatecard.js");
+const db = require("../custom_modules/db.js");
 
+const Categories = db.Categories;
 
-// Dummy data
-let collections = ['Beverages', 'Vegetables', 'Children'];
+const viewProduct = async (req,res) => {
+    let productId = req.params.productId;
+    const allProducts = [];
+    await Categories.find({}, (err, all) => {
+        if(err) res.send(`Error: ${err.message}`);
+        all.forEach(category => {
+            categoryProducts = category.products
+            allProducts.push(categoryProducts);
+        })
+        let flattenedProductsArray = allProducts.flat();
+        
+        flattenedProductsArray.forEach(product => {
+        if(productId == product._id){
+            res.render('../views/productDescription', {product: product});
+        }
+    })
+    })
+}
 
-let babyoilImg = '/images/baby-products/baby-1.jpg';
-let babyharnessImg = '/images/baby-products/baby-2.webp';
-let juiceImg = '/images/beverages/bev-img-1.jpg';
-let cheeseImg ='/images/dairy/dairy-1.jpg';
-let macImg = '/images/fast-food/fast-food-1.jpg';
-let tomatoesImg = '/images/fruits-vegetables/fruits-2.webp';
-
-let products = [
-    {productName: 'Johnson baby oil', productImage: babyoilImg, price: 100},
-    {productName: 'Johns baby harness', productImage: babyharnessImg, price: 200},
-    {productName: 'Coastal Juice', productImage: juiceImg, price: 150},
-    {productName: 'Heavenly cheese', productImage: cheeseImg, price: 80},
-    {productName: 'Big mac', productImage: macImg, price: 75},
-    {productName: 'Amazon Tomatoes', productImage: tomatoesImg, price: 190}
-]
-
-let collectionAndProduct = [
-    {collection : 'Beverages', products : ['Coastal Juice']},
-    {collection : 'Children', products : ['Johns baby harness', 'Johnson baby oil']},
-    {collection : 'Vegetables', products : ['Amazon tomatoes']}
-]
-
-
-const viewProduct = (req,res) => {
-        let productName = req.params.product;
-        let clickedProduct = products.filter(product => {
-            if(product.productName == productName){
-                return product;
+const productDescription = async (req,res) => {
+        let productId = req.params.productId;
+        const allProducts = [];
+        await Categories.find({}, (err, all) => {
+            if(err) res.send(`Error: ${err.message}`);
+            all.forEach(category => {
+                categoryProducts = category.products
+                allProducts.push(categoryProducts);
+            })
+            let flattenedProductsArray = allProducts.flat();
+            
+            flattenedProductsArray.forEach(product => {
+            if(productId == product._id){
+                res.render('../views/checkoutForm', {product: product});
             }
         })
-    
-        clickedProduct.forEach(product => {
-            res.render('../views/productDescription', {product: product});
         })
 }
 
-const productDescription =  (req,res) => {
-    let productName = req.params.product;
-    let clickedProduct = products.filter(product => {
-        if(product.productName == productName){
-            return product;
-        }
-    });
-
-    clickedProduct.forEach(product => {
-        res.render('../views/checkoutForm', {product: product});
-    })
-
-}
-
-const categories = (req,res) => {
-    res.render('../views/clientCategoriesTable', {collectionAndProduct : collectionAndProduct});
+const categories = async (req,res) => {
+    await Categories.find({}, (err, categories) => {
+        if(err) res.send(`Error: ${err.message}`);
+        res.render('../views/clientCategoriesTable', {categories : categories});
+    })  
 }
 
 const checkout =  (req,res) => {

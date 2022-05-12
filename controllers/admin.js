@@ -91,7 +91,7 @@ const addProductPOST = async (req, res) => {
 
     */
 
-    const query = {category : "Automotive"}
+    const query = {category : category}
     const update = {$push : {products : newProduct}}
 
     const updatedDocument = await Categories.findOneAndUpdate(query, update, {new : true});
