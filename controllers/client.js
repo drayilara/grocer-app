@@ -5,7 +5,8 @@ const db = require("../custom_modules/db.js");
 const Categories = db.Categories;
 
 const viewProduct = async (req,res) => {
-    let productId = req.params.productId;
+    try{
+        let productId = req.params.productId;
     const allProducts = [];
     await Categories.find({}, (err, all) => {
         if(err) res.send(`Error: ${err.message}`);
@@ -21,9 +22,14 @@ const viewProduct = async (req,res) => {
         }
     })
     })
+    }catch(err){
+        console.log(err)
+    }
+    
 }
 
 const productDescription = async (req,res) => {
+    try{
         let productId = req.params.productId;
         const allProducts = [];
         await Categories.find({}, (err, all) => {
@@ -40,13 +46,22 @@ const productDescription = async (req,res) => {
             }
         })
         })
+    }catch(err){
+        console.log(err);
+    }
+        
 }
 
 const categories = async (req,res) => {
-    await Categories.find({}, (err, categories) => {
-        if(err) res.send(`Error: ${err.message}`);
-        res.render('../views/clientCategoriesTable', {categories : categories});
-    })  
+    try{
+        await Categories.find({}, (err, categories) => {
+            if(err) res.send(`Error: ${err.message}`);
+            res.render('../views/clientCategoriesTable', {categories : categories});
+        })  
+    }catch(error) {
+        console.log(error)
+    }
+    
 }
 
 const checkout =  (req,res) => {
@@ -55,9 +70,11 @@ const checkout =  (req,res) => {
     let address = req.body.address;
     let email = req.body.email;
     let card = req.body.card;
-    let priceSold = Number(req.body.sellingPrice);
+    let totalPaid = Number(req.body.price);
     let date = new Date();
     date = date.toLocaleDateString('en-GB', {year : 'numeric', month: '2-digit', day : '2-digit'});
+
+    console.log(price);
 
     // const order = {
     //   fname : fname,
@@ -68,7 +85,8 @@ const checkout =  (req,res) => {
     //   productID,
     //   dateOfPurchase : date,
     //   cardDetails : card,
-    //   price : priceSold,
+    //   pricePerUnit : priceSold,
+    //   unitsBought : 
     // }
 
     if(validateCard(card)) {

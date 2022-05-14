@@ -13,7 +13,7 @@ const adminRouter = require('./routes/admin.js');
 // Create server
 const app = express(); 
 
-// template engine
+// template engine -- ejs
 app.set('view engine', 'ejs');
 
 // app-level middleware
