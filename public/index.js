@@ -1,32 +1,48 @@
 /* dynamically generates price of products based on quantity ordered on checkout page
 Links with the product checkout page
 */
+// get unit Price
+let unitPrice = document.getElementById("productPrice").innerText;
+// get unit Price without $ sign
+unitPrice = unitPrice.replace("$", "");
+    
+// get quantity as defined by user ----> starts as an empty text field
+// get quatity field
+let quantityField = document.getElementById("unitsPurchased");
 
-const currentPrice = document.getElementsByClassName('price-sold')[0].innerText;
-let price = currentPrice.replace('$', '');
-price = parseInt(price,10);
-const units = document.getElementById('units-purchased');
+// add  event to quantity field and coerce
+quantityField.addEventListener("change", updatePriceAndHiddenCheckoutFields)
+quantityField.addEventListener("keyup", updatePriceAndHiddenCheckoutFields)
 
-document.getElementById("hidden-checkout-field").setAttribute('value', price);
-units.addEventListener('change', updatePrice,false); 
-units.addEventListener('keyup', updatePrice, false);
- 
-function updatePrice(evt) {
-    evt.stopPropagation();
-    let unitsPurchased = units.value
-    unitsPurchased = parseInt(unitsPurchased, 10);
-    let pricePerUnit = price
-  
-    if(unitsPurchased <= 0 || isNaN(unitsPurchased)){
-        unitsPurchased = 1;
-        alert('Please enter a valid number');
+function updatePriceAndHiddenCheckoutFields(){
+    // get quantity as defined by user ----> starts as an empty text field
+    let quantity = quantityField.value;
+    let totalPrice;
+
+    // coerce quantity to always be at least 1, and not a text
+    if(quantity <= 0 || isNaN(quantity)) {
+        alert("Please enter a valid quantity");
+        quantity = 1
+        // Update price
+        totalPrice = unitPrice * quantity;
+    }else {
+        totalPrice = unitPrice * quantity
     }
-    let finalPrice = pricePerUnit * unitsPurchased;
-    document.getElementsByClassName('price-sold')[0].innerText = '$ ' + finalPrice;
+    // Updates
 
-    //dynamically update sellingPrice in checkout form
-    document.getElementById("hidden-checkout-field").setAttribute('value', finalPrice);
+    // update units purchased in checkout form
+    document.getElementById("unitsPurchasedHidden").value = quantity;
+
+    // update totalPrice in checkout form
+    document.getElementById("totalPriceHidden").value = totalPrice;
+
+    // update Price for user
+    document.getElementById("productPrice").innerText = "$ " + totalPrice;
 }
+
+
+
+
 
 
 

@@ -1,8 +1,10 @@
 // Load needed custom module
 const validateCard = require("../custom_modules/validatecard.js");
 const db = require("../custom_modules/db.js");
+const faker = require("faker");
 
 const Categories = db.Categories;
+const Orders = db.Orders;
 
 const viewProduct = async (req,res) => {
     try{
@@ -64,32 +66,64 @@ const categories = async (req,res) => {
     
 }
 
-const checkout =  (req,res) => {
+const checkout = async (req,res) => {
     let fname = req.body.fname;
     let lname = req.body.lname;
     let address = req.body.address;
     let email = req.body.email;
-    let card = req.body.card;
+    let cardDetails = req.body.card;
+    let productId = req.body.productId
     let totalPaid = Number(req.body.price);
-    let date = new Date();
-    date = date.toLocaleDateString('en-GB', {year : 'numeric', month: '2-digit', day : '2-digit'});
+    let unitsBought = Number(req.body.unitsBought);
+    let dateOfPurchase = new Date();
+    dateOfPurchase = dateOfPurchase.toLocaleDateString('en-GB', {year : 'numeric', month: '2-digit', day : '2-digit'});
 
-    console.log(price);
+    // Fake orders ----> Faker js
+    /*
+     let suffix = "@gmail.com";
+     let firstName = faker.name.firstName()
+     let uniqueEmail = firstName + suffix;
+     let id = faker.random.alphaNumeric(10)
+     let card = faker.finance.creditCardNumber();
+    
 
-    // const order = {
-    //   fname : fname,
-    //   lname : lname,
-    //   email : email,
-    //   address : address,
-    //   productCategory,
-    //   productID,
-    //   dateOfPurchase : date,
-    //   cardDetails : card,
-    //   pricePerUnit : priceSold,
-    //   unitsBought : 
-    // }
+     const newOrder = new Orders({
+         fname : firstName,
+         lname : faker.name.lastName(),
+         email : uniqueEmail,
+         address : faker.address.streetAddress(),
+         cardDetails : card,
+         productId : id,
+         totalPaid : faker.commerce.price(),
+         unitsBought : Math.floor(Math.random() * 5),
+         dateOfPurchase : dateOfPurchase
+     });
 
-    if(validateCard(card)) {
+    */
+
+     const newOrder = new Orders({
+         fname : fname,
+         lname : lname,
+         email : email,
+         address : address,
+         cardDetails : cardDetails,
+         productId : productId,
+         totalPaid : totalPaid,
+         unitsBought : unitsBought,
+         dateOfPurchase : dateOfPurchase
+     })
+
+
+    try{
+        await Orders.create(newOrder, function(err){
+            if(err) console.log(`Error: ${err.message}`);
+        })
+    }catch(err){
+        console.log(err);
+    }
+  
+
+    if(validateCard(cardDetails)) {
         res.send('<h1> Payment successful </h1>');
     }else {
         res.send('<h1> Please enter valid card details </h1>');

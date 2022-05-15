@@ -37,12 +37,7 @@ const orderSchema = new mongoose.Schema({
       required : [1, 'Please an address']
     },
 
-    productCategory : {
-      type : String,
-      required : [1, 'Must have product category']
-    },
-
-    productID : {
+    productId : {
       type : String,
       required : [1, 'Product ID please!']
     },
@@ -52,15 +47,23 @@ const orderSchema = new mongoose.Schema({
       required : [1, 'Must have a purchase date']
     }, 
 
-    cardDetails : String,
+    cardDetails : {
+      type : String,
+      required : [1, "Please enter card details"]
+    },
 
-    price : {
+    totalPaid : {
       type : Number,
       required : [1, 'Price must be present']
+    }, 
+
+    unitsBought : {
+      type : String,
+      required : [1, "Provide units bought"]
     }
 });
 
-// category schema : Embeds 'products' to prevent complex, poor performing queries.
+
 
 const productSchema = new mongoose.Schema({
     name : {
