@@ -1,0 +1,51 @@
+<%- include('partials/header') -%>
+
+    
+
+<section class="container-fluid vendor-all-products">
+    <h2 class="adminViewCategoryHeader"><%= category %></h2>
+    <form action="/admin/categories" method="GET" class="vendor-add-a-product-form">
+        <button type="submit" class="btn btn-sm btn-primary add-product-btn">Back to categories</button>
+    </form>
+    
+
+    <button class="btn btn-sm total-products-btn btn-outline-primary">Total products: <%= products.length %> </button>
+
+    <table class="table table-bordered border-primary vendor-table">
+        <thead>
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Created on</th>
+            <th scope="col">Image</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+    <% products.forEach(product => { %>
+    
+          <tr>
+            <th scope="row"> <%= ++rowCount %></th>
+            <td><h5><%= product.name %></h5></td>
+            <td><h5><%= product.dateCreated %></h5></td>
+            <td><img src="<%= product.imageUrl %>" style="width: 200px;" alt="<%= product.name %>"></td>
+          </tr>
+    
+    <%  }) %>
+          
+        </tbody>
+      </table>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+<%- include('partials/footer') -%>

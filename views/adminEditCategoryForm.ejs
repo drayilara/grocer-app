@@ -1,0 +1,19 @@
+<%- include('partials/header') -%>
+
+
+<section class="container-fluid vendorAddProductForm">
+
+    <form action='/admin/editCategory'  method="POST">
+        <h3>Edit category</h3><br>
+        <h4><%= status %></h4>
+        <label for="" class="form-label">Update category name</label>
+        <input type="text" class="form-control" name="categoryName" required>
+        <input type="hidden" name="categoryId" value="<%= categoryId %>">
+        <br>
+        <button type="submit"  class="btn btn-md btn-primary">Edit</button>
+       
+    </form>
+    
+</section>
+
+<%- include('partials/footer') -%>

@@ -46,6 +46,21 @@ app.get('/', async (req,res) => {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 async function connectToServer() {
     const PORT = 3000;
     await app.listen(PORT, () => console.log('Web server is running on port ' + PORT));

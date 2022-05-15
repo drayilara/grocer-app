@@ -7,7 +7,7 @@
     </form>
     
 
-    <button class="btn btn-sm total-products-btn btn-outline-primary">Total collections: <%= collectionAndProduct.length %> </button>
+    <button class="btn btn-sm total-products-btn btn-outline-primary">Total categories: <%= categories.length %> </button>
 
     <table class="table table-bordered border-primary vendor-table">
         <thead>
@@ -20,18 +20,19 @@
           </tr>
         </thead>
         <tbody>
-    <% collectionAndProduct.forEach(collection => { %>
+    <% categories.forEach(collection => { %>
     
         <tr>
             <th scope="row"> <%= ++rowCount %></th>
-            <td><h5><%= collection.collection %></h5></td>
+            <td><h5><%= collection.category %></h5></td>
             <td><h5><%= collection.products.length %></h5></td>
-            <td></td>
+            <td><h5><%= collection.dateCreated %></h5></td>
             <td>
-                <form action="" method="post" class="vendor-all-products-form">
-                    <button type="submit" name="view" class="btn btn-sm btn-outline-secondary action-item" value="<%= collection.id %>"> View </button>
-                    <button type="submit" name="edit" class="btn btn-sm btn-outline-success action-item" value="<%= collection.id %>"> Edit </button>
-                    <button type="submit" name="delete" class="btn btn-sm btn-outline-danger action-item" value="<%= collection.id %>"> Delete </button>
+                <form action="/admin/categories/actions" method="post" class="vendor-all-products-form">
+                    <input type="hidden" name="action" class="adminCategoryAction" value>
+                    <button type="submit" name="id" class="btn btn-sm btn-outline-secondary action-item adminCategoryViewAction" value="<%= collection._id %>">View</button>
+                    <button type="submit" name="id" class="btn btn-sm btn-outline-success action-item adminCategoryEditAction" value="<%= collection._id %>">Edit</button>
+                    <button type="submit" name="id" class="btn btn-sm btn-outline-danger action-item adminCategoryDeleteAction" value="<%= collection._id %>">Delete</button>
                 </form>
             </td>
           </tr>

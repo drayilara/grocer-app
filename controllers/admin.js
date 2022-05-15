@@ -9,15 +9,41 @@ const faker = require('faker');
 // Get Models
 const Categories = db.Categories
 
-const allProducts = (req,res) => {
+
+
+
+
+
+const allProducts = async (req,res) => {
     let rowCount = 0;
-    res.render('../views/adminAllProductTable', {products: products, rowCount: rowCount});
+    // Get all products from db
+      try{
+        await Categories.find({}, (err, collections) => {
+          if(err) res.send(`Error: ${err.message}`)
+          let products;
+          if(collections) {  
+             products = collections.reduce((accumulator, currentCategory) => accumulator.concat(currentCategory.products),[]);
+             res.render('../views/adminAllProductTable', {products: products, rowCount: rowCount});
+          } 
+        })     
+      }catch(err){
+        console.log(err.message);
+      }      
 }
+
+
+
+
+
 
 const addProductGET = (req,res) => {
     let status = '';
     res.render('../views/adminAddProduct', {status : status})
 }
+
+
+
+
 
 const addProductPOST = async (req, res) => {
     let status;
@@ -43,6 +69,7 @@ const addProductPOST = async (req, res) => {
     const newProduct = {
         name : _.capitalize(req.body.productName),
         description : _.capitalize(description),
+        category : _.capitalize(req.body.category),
         imageUrl : path.join('/uploads/', req.file.filename),
         price : Number(req.body.productPrice),
         vendor : _.capitalize(req.body.vendor),
@@ -70,15 +97,38 @@ const addProductPOST = async (req, res) => {
     res.render('../views/adminAddProduct', {status : status});
 }
 
-const categoriesGET = (req,res) => {
+
+
+
+
+
+const categoriesGET = async (req,res) => {
     let rowCount = 0
-    res.render('../views/adminCategories', {collectionAndProduct: collectionAndProduct, rowCount: rowCount});
+    try{
+     await Categories.find({}, function(err, categories){
+        res.render('../views/adminCategories', {categories: categories, rowCount: rowCount});
+      })
+    }catch(err){
+      console.log(err.message);
+    }  
 }
+
+
+
+
+
+
 
 const categoriesPOST = (req,res) => {
     let status = ""
     res.render('../views/adminAddCategory', {status:status});
 }
+
+
+
+
+
+
 
 const createCategory =  async (req,res) => {
     let newCat = _.capitalize(req.body.categoryName);
@@ -112,11 +162,68 @@ const createCategory =  async (req,res) => {
     res.render('../views/adminAddCategory', {status:status});
 }
 
+
+const adminActions = (req,res) => {
+  let action = req.body.action
+  let categoryId = req.body.id;
+  
+  if(action == "Delete") {
+      Categories.deleteOne({_id : categoryId}, function(err){
+          if(err){
+              console.log(err.message);
+          }
+      })
+      res.redirect("/admin/categories");
+  }
+
+  if(action == "View") {
+      Categories.findOne({_id: categoryId}, function(err, foundCategory){
+          if(err) console.log(err.message);
+
+          else{
+              let rowCount = 0
+              let category = foundCategory.category;
+              let products = foundCategory.products;
+              res.render("../views/adminViewCategory", {category: category, products: products, rowCount: rowCount});
+          }
+      })
+  }
+
+  if(action == "Edit") {
+      res.render("../views/adminEditCategoryForm", {categoryId: categoryId, status: ""});
+  }
+
+}
+
+
+const editCategory =  ((req,res) => {
+  let categoryId = req.body.categoryId;
+  let updateName = _.capitalize(req.body.categoryName);
+
+  let update = {category: updateName}
+  filter = {_id: categoryId}
+  
+  Categories.updateOne(filter, update, function(err){
+      if(err) console.log(err.message);
+  })
+  res.redirect("/admin/categories");
+});
+
+
+
+
+
+
+
+
+
 module.exports = {
     allProducts,
     addProductGET,
     addProductPOST,
     categoriesGET,
     categoriesPOST,
-    createCategory
+    createCategory,
+    adminActions,
+    editCategory
 }

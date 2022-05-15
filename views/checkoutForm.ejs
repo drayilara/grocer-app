@@ -32,14 +32,14 @@
 
                       <div class="input-group mb-5">
                         <span class="input-group-text">First and last name</span>
-                        <input type="text" aria-label="First name" class="form-control" name="fname"> 
-                        <input type="text" aria-label="Last name" class="form-control" name="lname">
+                        <input type="text" aria-label="First name" class="form-control" name="fname" required> 
+                        <input type="text" aria-label="Last name" class="form-control" name="lname" required>
                       </div>
 
                       <label>Email</label>
 
                       <div class="input-group mb-5">
-                        <input type="text" class="form-control" name="email" placeholder="sample" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                        <input type="text" class="form-control" name="email" placeholder="sample" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
                         <span class="input-group-text" id="basic-addon2">@example.com</span>
                       </div>
 
@@ -47,14 +47,14 @@
 
                       <div class="input-group flex-nowrap mb-5">
                         <span class="input-group-text" id="addon-wrapping">Your address here</span>
-                        <input type="text" class="form-control" name="address" placeholder="6 Bradley Washington, USA" aria-label="Username" aria-describedby="addon-wrapping">
+                        <input type="text" class="form-control" name="address" placeholder="6 Bradley Washington, USA" aria-label="Username" aria-describedby="addon-wrapping" required>
                       </div>
 
                       <label>Please enter credit card details</label>
 
                       <div class="input-group flex-nowrap mb-5">
                         <span class="input-group-text" id="addon-wrapping">Card number</span>
-                        <input type="password" class="form-control" name="card" placeholder="xxxx xxxx xxxx xxxx" aria-label="Username" aria-describedby="addon-wrapping">
+                        <input type="password" class="form-control" name="card" placeholder="xxxx xxxx xxxx xxxx" aria-label="Username" aria-describedby="addon-wrapping" required>
                       </div>
 
                       <input type="hidden" id="totalPriceHidden" name="price" value>

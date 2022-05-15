@@ -1,6 +1,37 @@
+/* Determine Action @ admin/categories/action i.e the value of the hidden input field.This determines action in the backend.
+This logic is reused for all admin actions in different pages and routes
+*/
+
+let viewActionBtns = document.querySelectorAll(".adminCategoryViewAction");
+let editActionBtns = document.querySelectorAll(".adminCategoryEditAction");
+let deleteActionBtns = document.querySelectorAll(".adminCategoryDeleteAction");
+
+viewActionBtns.forEach(btn => {
+    btn.addEventListener("click", getAction)
+})
+
+editActionBtns.forEach(btn => {
+    btn.addEventListener("click", getAction)
+})
+
+deleteActionBtns.forEach(btn => {
+    btn.addEventListener("click", getAction)
+})
+
+function getAction(evt){
+    let allActions = document.querySelectorAll(".adminCategoryAction")
+    allActions.forEach(action => {
+        action.value = evt.target.innerHTML;
+    })
+}
+
+
+
+
 /* dynamically generates price of products based on quantity ordered on checkout page
 Links with the product checkout page
 */
+
 // get unit Price
 let unitPrice = document.getElementById("productPrice").innerText;
 // get unit Price without $ sign
@@ -39,6 +70,9 @@ function updatePriceAndHiddenCheckoutFields(){
     // update Price for user
     document.getElementById("productPrice").innerText = "$ " + totalPrice;
 }
+
+
+
 
 
 

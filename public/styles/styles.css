@@ -125,3 +125,10 @@ body {
     margin-top : 5vh;
 }
 
+
+/* Admin */
+
+.adminViewCategoryHeader {
+    text-align : center;
+}
+

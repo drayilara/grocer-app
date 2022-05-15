@@ -9,8 +9,8 @@ const Orders = db.Orders;
 const viewProduct = async (req,res) => {
     try{
         let productId = req.params.productId;
-    const allProducts = [];
-    await Categories.find({}, (err, all) => {
+        const allProducts = [];
+        await Categories.find({}, (err, all) => {
         if(err) res.send(`Error: ${err.message}`);
         all.forEach(category => {
             categoryProducts = category.products
