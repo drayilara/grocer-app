@@ -32,6 +32,7 @@
             <td>
                 <form action="/admin/allProducts" method="POST" class="vendor-all-products-form">
                     <input type="hidden" name="action" class="adminCategoryAction" value>
+                    <input type="hidden" name="productName" value="<%= product.name %>">
                     <button type="submit" name="id" class="btn btn-sm btn-outline-secondary action-item adminCategoryViewAction" value="<%= product._id %>">View</button>
                     <button type="submit" name="id" class="btn btn-sm btn-outline-success action-item adminCategoryEditAction" value="<%= product._id %>">Edit</button>
                     <button type="submit" name="id" class="btn btn-sm btn-outline-danger action-item adminCategoryDeleteAction" value="<%= product._id %>">Delete</button>

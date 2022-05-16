@@ -14,6 +14,16 @@ const Categories = db.Categories
 
 
 
+
+
+
+
+
+
+
+
+
+
 const allProducts = async (req,res) => {
     let rowCount = 0;
     // Get all products from db
@@ -36,10 +46,30 @@ const allProducts = async (req,res) => {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 const addProductGET = (req,res) => {
     let status = '';
     res.render('../views/adminAddProduct', {status : status})
 }
+
+
+
+
+
+
+
 
 
 
@@ -102,6 +132,10 @@ const addProductPOST = async (req, res) => {
 
 
 
+
+
+
+
 const categoriesGET = async (req,res) => {
     let rowCount = 0
     try{
@@ -123,6 +157,11 @@ const categoriesPOST = (req,res) => {
     let status = ""
     res.render('../views/adminAddCategory', {status:status});
 }
+
+
+
+
+
 
 
 
@@ -163,7 +202,16 @@ const createCategory =  async (req,res) => {
 }
 
 
-const adminActions = (req,res) => {
+
+
+
+
+
+
+
+
+
+const adminCategoryActions = (req,res) => {
   let action = req.body.action
   let categoryId = req.body.id;
   
@@ -196,6 +244,17 @@ const adminActions = (req,res) => {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
 const editCategory =  ((req,res) => {
   let categoryId = req.body.categoryId;
   let updateName = _.capitalize(req.body.categoryName);
@@ -217,6 +276,55 @@ const editCategory =  ((req,res) => {
 
 
 
+const adminProductActions =  ((req,res) => {
+  let action = req.body.action;
+  let productId = req.body.id;
+  let productName = req.body.productName
+
+  
+  if(action == "Delete") {
+     Categories.updateOne({}, {$pull: {products: {"_id": productId}}}, function(err,result){
+         if(err) return err.message
+         console.log(result);
+     });
+     res.redirect("/admin/allProducts");
+  }
+
+  if(action == "Edit") {
+      res.render("../views/adminEditProductForm", {status: "", productId: productId, productName: productName});
+  }
+
+
+  if(action == "View") {
+      let allProducts = [];
+      Categories.find({}, function(err, allCategories){
+          if(err) return err.message;
+
+          if(allCategories){
+              allCategories.forEach(category => {
+                  allProducts.push(category.products);
+              })
+          }
+
+          allProducts = allProducts.flat();
+
+          allProducts.forEach(product => {
+              if(product._id == productId) {
+                  res.render("../views/adminViewSingleProduct", {product : product});
+              }
+      })
+      })      
+  }
+})
+
+
+
+
+
+
+
+
+
 module.exports = {
     allProducts,
     addProductGET,
@@ -224,6 +332,7 @@ module.exports = {
     categoriesGET,
     categoriesPOST,
     createCategory,
-    adminActions,
-    editCategory
+    adminCategoryActions,
+    editCategory,
+    adminProductActions
 }

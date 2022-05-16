@@ -1,0 +1,32 @@
+<%- include('partials/header') -%>
+
+
+<section class="container-fluid vendor-all-products">
+
+    <form action="/admin/allProducts" method="GET" class="vendor-add-a-product-form">
+        <button class="btn btn-sm btn-primary add-product-btn">Back to all Products</button>
+    </form>
+
+    <table class="table table-bordered border-primary vendor-table">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Image</th>
+            <th scope="col">Price</th>
+            <th scope="col">Added on</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th scope="row" id="vendorAllProductCounter"> <%= product.name %></th>
+            <td><img src="<%= product.imageUrl %>" alt="" class="vendor-product-image" alt="<%= product.name %>"></td>
+            <td><h5>$ <%= product.price %></h5></td>
+            <td><h5><%= product.dateCreated %></h5></td>
+          </tr>
+        </tbody>
+      </table>
+
+</section>
+
+
+<%- include('partials/footer') -%>
