@@ -2,9 +2,7 @@
 
 
 <section class="container-fluid vendorAddProductForm">
-
-       
-
+    
     <form action="/admin/EditProduct" enctype="multipart/form-data"  method="POST">
         <h3>Edit <%= productName %></h3><br>
         <label for="" class="form-label">Name</label>
@@ -18,6 +16,10 @@
         
         <label for="" class="form-label">Upload Image</label>
         <input type="file" class="form-control" name="imageFile"  class="form-control" required>
+
+
+        <label for="" class="form-label">Category</label>
+        <input type="text" class="form-control" name="category" required>
        
     
         <label for="" class="form-label">Vendor</label>
@@ -27,11 +29,12 @@
         <input type="hidden" name="id" value="<%= productId %>">
         <button type="submit" class="btn btn-md btn-primary" >Edit</button>
     
-        <h3><%= status %></h3>
-        
+        <h3><%= status %></h3>    
     </form>
     
-
+    <form action="/admin/allProducts" method="GET">
+        <button type="submit" class="btn btn-md btn-primary">Back to all Products</button>
+      </form> 
 </section>
 
 

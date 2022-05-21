@@ -1,25 +1,15 @@
 // load needed custom module
-const upload = require("../custom_modules/fileupload.js");
 const db = require('../custom_modules/db.js');
 // Lodash
 const _ = require('lodash');
+// path 
+const path = require("path");
 // Faker
 const faker = require('faker');
 
+
 // Get Models
 const Categories = db.Categories
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -50,15 +40,6 @@ const allProducts = async (req,res) => {
 
 
 
-
-
-
-
-
-
-
-
-
 const addProductGET = (req,res) => {
     let status = '';
     res.render('../views/adminAddProduct', {status : status})
@@ -75,61 +56,67 @@ const addProductGET = (req,res) => {
 
 
 
-const addProductPOST = async (req, res) => {
-    let status;
-    upload(req, res, (err) => {
-    if(err){
-        status = err.message
-    } else {
-      if(req.file == undefined){
-        status = 'Please upload a file';
-      } else {
-        status = 'Uploaded succesfully';  
-      }
-    }});
 
+const editProduct = ((req,res) => {
+  // req.file.filename read directly from upload middleware mounted on app @ app.js
+  let productId = req.body.id;
+  let category = req.body.category;
+
+  let date = new Date();
+  date = date.toLocaleDateString('en-GB', {year:"numeric",month:"2-digit", day:"2-digit"});        
+
+  const update = {
+      "products.$.name" : _.capitalize(req.body.productName),
+      "products.$.description" : _.capitalize(req.body.description),
+      "products.$.imageUrl" : path.join('/uploads/', req.file.filename),
+      "products.$.price" : Number(req.body.productPrice),
+      "products.$.vendor" : _.capitalize(req.body.vendor),
+      "products.$.dateCreated" : "" + date
+  } 
+
+  Categories.updateOne({"products._id" : productId, category : category}, {$set: update}, function(err, result){
+      if(err) return err.message;
+      else res.redirect("/admin/allProducts");
+  })
+})
+
+
+
+
+
+
+
+
+
+
+const addProductPOST = async (req, res) => {
     let date = new Date();
     date = date.toLocaleDateString('en-GB', {year:"numeric",month:"2-digit", day:"2-digit"});
 
     let category = req.body.category;
     category = _.capitalize(category);
+
+    console.log(req.file)
     
     // Actual user data
 
     const newProduct = {
         name : _.capitalize(req.body.productName),
-        description : _.capitalize(description),
+        description : _.capitalize(req.body.description),
         category : _.capitalize(req.body.category),
         imageUrl : path.join('/uploads/', req.file.filename),
         price : Number(req.body.productPrice),
         vendor : _.capitalize(req.body.vendor),
-        dateCreated : date
+        dateCreated : "" + date
     } 
-
-    /* fake data from faker.js
-
-    const newProduct = {
-      name : _.capitalize(faker.commerce.productName()),
-      description : faker.commerce.productDescription(),
-      imageUrl : faker.image.fashion(),
-      price : Number(faker.commerce.price()),
-      vendor : _.capitalize(faker.name.findName()),
-      dateCreated : date
-    }
-
-    */
 
     const query = {category : category}
     const update = {$push : {products : newProduct}}
 
     const updatedDocument = await Categories.findOneAndUpdate(query, update, {new : true});
 
-    res.render('../views/adminAddProduct', {status : status});
+    res.redirect("/admin/allProducts");
 }
-
-
-
-
 
 
 
@@ -180,14 +167,6 @@ const createCategory =  async (req,res) => {
       category : newCat,
       dateCreated : date
     }
-
-
-    // Use faker to generate data for production
-
-    // let newCategory = {
-    //   category : faker.commerce.department(),
-    //   dateCreated : date
-    // }
   
     let status;
   
@@ -334,5 +313,6 @@ module.exports = {
     createCategory,
     adminCategoryActions,
     editCategory,
-    adminProductActions
+    adminProductActions,
+    editProduct
 }

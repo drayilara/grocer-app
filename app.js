@@ -2,6 +2,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
+const upload = require("./custom_modules/fileupload.js");
 
 // Load needed custom modules
 const db = require('./custom_modules/db.js');
@@ -20,6 +21,9 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(express.static(__dirname + '/public')); 
 
+// Intercept any upload
+app.use(upload);
+
 // Mount Routers
 app.use('/client', clientRouter);
 app.use('/admin', adminRouter);
@@ -32,7 +36,20 @@ const Categories = db.Categories;
 connectToServer();
 
 
-app.get('/', async (req,res) => {
+app.get("/login", (req,res) =>  {
+    res.render("userLogin");
+})
+
+
+app.get("/register", (req,res) =>  {
+    res.render("userRegister");
+})
+
+
+
+
+
+app.get('/actualHome', async (req,res) => {
     // Get All products and categories from db
         await Categories.find({}, (err, collections) => {
         if(err) res.send(`Error: ${err.message}`)

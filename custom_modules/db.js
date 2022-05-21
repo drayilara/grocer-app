@@ -81,6 +81,11 @@ const productSchema = new mongoose.Schema({
       required : [1, 'Every product must have a price']
     },
 
+    category : {
+      type : String,
+      required : [1, 'Please add a category']
+    },
+
     dateCreated : {
       type : String,
       required : [1, 'Enter date created']
@@ -112,12 +117,22 @@ dateCreated : {
 }
 })
 
+
+const usersSchema = mongoose.Schema({
+    email : String,
+    password : String,
+    googleId : String,
+    facebookId : String,
+})
+
 // Models
 const Orders = mongoose.model('Order', orderSchema);
 const Categories = mongoose.model('Category', categorySchema);
+const Users = mongoose.model("User", usersSchema);
 
 module.exports = {
     connectToDB,
     Orders,
-    Categories
+    Categories,
+    Users
 }
