@@ -75,19 +75,16 @@ app.route("/register")
         const saltRounds = 10;
         const password = req.body.password;
         const email = req.body.email;
+        const name = req.body.name;
     
         bcrypt.hash(password, saltRounds, function(err, hash) {
             // Store hash in your password DB.
             if(err) console.log(err.message)
     
             else{
-                // const newUser = new Users({
-                //     "local.email" : email,
-                //     "local.password" : hash
-                // })
-
                 const newUser = new Users({
                     local : {
+                        name: name,
                         email : email,
                         password : hash
                     }
@@ -112,7 +109,7 @@ app.get("/login", (req,res) => {
     res.render("userLogin");
 })
 
-app.post("/login", passport.authenticate("local", {successRedirect: "/actualHome", failureRedirect: "/login"}));
+app.post("/login", passport.authenticate("local", {failureRedirect: "/login", successRedirect: "/actualHome"}));
 
 
 

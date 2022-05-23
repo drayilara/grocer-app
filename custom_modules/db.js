@@ -126,30 +126,13 @@ function isValidEmail(){
 
 
 const userSchema = mongoose.Schema({
-    // email : {
-    //   type : String,
-    //   unique : true,
-    //   trim : true,
-    //   lowercase : true,
-    //   validate : [isValidEmail, "Please enter a valid email"]
-    // },
-
-    // password : String,
-
-    // googleId : {
-    //   type : String,
-    //   trim : true
-    // },
-
-    // facebookId : {
-    //   type : String,
-    //   trim : true
-    // },
-
     local : {
-          name : String,
+          name : {
+            type : String,
+            trim: true
+          },
 
-        password: {
+          password: {
           type : String,
           required: [1, "Please enter passowrd"]
       },
