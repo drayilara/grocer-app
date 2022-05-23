@@ -1,11 +1,17 @@
 // Init
+require("dotenv").config()
 const express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
 const upload = require("./custom_modules/fileupload.js");
+const bcrypt = require("bcrypt");
+const passport = require("./auth/passport");
+const session = require("express-session"); 
+const MongoStore = require("connect-mongo");
 
 // Load needed custom modules
 const db = require('./custom_modules/db.js');
+const Users = db.Users;
 
 // Get Routers
 const clientRouter = require('./routes/client.js');
@@ -35,15 +41,91 @@ const Categories = db.Categories;
 // connect to server
 connectToServer();
 
+// Login and sessions
+// 5 days of maxAge
+const cookiesMaxAge = 432000000;
 
-app.get("/login", (req,res) =>  {
+app.use(session({
+    secret : process.env.SESSION_SECRET,
+    store : MongoStore.create({mongoUrl: "mongodb://localhost:27017/shopdb", autoRemove: "native"}),
+    resave: false,
+    saveUninitialized : true,
+    cookie: {maxAge: Date.now() + cookiesMaxAge}
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+
+
+
+
+
+
+
+// Register route
+
+app.route("/register")
+    .get((req,res) =>  {
+        res.render("userRegister");
+    })
+
+    .post((req,res) =>  {
+        const saltRounds = 10;
+        const password = req.body.password;
+        const email = req.body.email;
+    
+        bcrypt.hash(password, saltRounds, function(err, hash) {
+            // Store hash in your password DB.
+            if(err) console.log(err.message)
+    
+            else{
+                // const newUser = new Users({
+                //     "local.email" : email,
+                //     "local.password" : hash
+                // })
+
+                const newUser = new Users({
+                    local : {
+                        email : email,
+                        password : hash
+                    }
+                })
+    
+                Users.create(newUser, function(err, user){
+                    if(err) console.log(err.message);
+        
+                    res.redirect("/login")
+                })
+            }       
+        });
+    })
+
+
+
+
+
+// Login route
+
+app.get("/login", (req,res) => {
     res.render("userLogin");
 })
 
+app.post("/login", passport.authenticate("local", {successRedirect: "/actualHome", failureRedirect: "/login"}));
 
-app.get("/register", (req,res) =>  {
-    res.render("userRegister");
-})
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -118,17 +118,71 @@ dateCreated : {
 })
 
 
-const usersSchema = mongoose.Schema({
-    email : String,
-    password : String,
-    googleId : String,
-    facebookId : String,
+
+function isValidEmail(){
+  const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+  return re.test(this.local.email);
+}
+
+
+const userSchema = mongoose.Schema({
+    // email : {
+    //   type : String,
+    //   unique : true,
+    //   trim : true,
+    //   lowercase : true,
+    //   validate : [isValidEmail, "Please enter a valid email"]
+    // },
+
+    // password : String,
+
+    // googleId : {
+    //   type : String,
+    //   trim : true
+    // },
+
+    // facebookId : {
+    //   type : String,
+    //   trim : true
+    // },
+
+    local : {
+          name : String,
+
+        password: {
+          type : String,
+          required: [1, "Please enter passowrd"]
+      },
+      
+        email : {
+          type : String,
+          validate: [isValidEmail, "Please enter a valid email"],
+          required: [1, "Please provide email"],
+          unique: true
+      }
+
+    },
+
+     google : {
+        name : String,
+        token : String,
+        email : String,
+        id : String
+    },
+
+     facebook : {
+        name : String,
+        token : String,
+        email : String,
+        id : String
+    } 
 })
+
 
 // Models
 const Orders = mongoose.model('Order', orderSchema);
 const Categories = mongoose.model('Category', categorySchema);
-const Users = mongoose.model("User", usersSchema);
+const Users = mongoose.model("User", userSchema);
 
 module.exports = {
     connectToDB,
