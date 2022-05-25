@@ -35,6 +35,12 @@ const localVerifyCallback = (username, password, done) => {
 const localStrategy = new LocalStrategy(localOptions, localVerifyCallback);
 
 
+
+/*--------------------- GOOGLE STRATEGY -------------------------*/
+
+
+
+
 /*------------------------ MOUNT STRATEGIES ----------------------*/
 
 

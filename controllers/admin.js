@@ -220,6 +220,7 @@ const adminCategoryActions = (req,res) => {
       res.render("../views/adminEditCategoryForm", {categoryId: categoryId, status: ""});
   }
 
+
 }
 
 

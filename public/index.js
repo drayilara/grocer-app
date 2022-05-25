@@ -7,15 +7,15 @@ let editActionBtns = document.querySelectorAll(".adminCategoryEditAction");
 let deleteActionBtns = document.querySelectorAll(".adminCategoryDeleteAction");
 
 viewActionBtns.forEach(btn => {
-    btn.addEventListener("click", getAction)
+    btn.onclick = getAction
 })
 
 editActionBtns.forEach(btn => {
-    btn.addEventListener("click", getAction)
+    btn.onclick = getAction
 })
 
 deleteActionBtns.forEach(btn => {
-    btn.addEventListener("click", getAction)
+    btn.onclick = getAction
 })
 
 function getAction(evt){
@@ -24,9 +24,6 @@ function getAction(evt){
         action.value = evt.target.innerHTML;
     })
 }
-
-
-
 
 /* dynamically generates price of products based on quantity ordered on checkout page
 Links with the product checkout page
@@ -41,9 +38,8 @@ unitPrice = unitPrice.replace("$", "");
 // get quatity field
 let quantityField = document.getElementById("unitsPurchased");
 
-// add  event to quantity field and coerce
-quantityField.addEventListener("change", updatePriceAndHiddenCheckoutFields)
-quantityField.addEventListener("keyup", updatePriceAndHiddenCheckoutFields)
+// add  event to quantity field and coerce.
+quantityField.oninput = updatePriceAndHiddenCheckoutFields
 
 function updatePriceAndHiddenCheckoutFields(){
     // get quantity as defined by user ----> starts as an empty text field

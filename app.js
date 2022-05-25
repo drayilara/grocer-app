@@ -50,7 +50,7 @@ app.use(session({
     store : MongoStore.create({mongoUrl: "mongodb://localhost:27017/shopdb", autoRemove: "native"}),
     resave: false,
     saveUninitialized : true,
-    cookie: {maxAge: Date.now() + cookiesMaxAge}
+    cookie: {maxAge: cookiesMaxAge}
 }));
 
 app.use(passport.initialize());
