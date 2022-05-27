@@ -9,7 +9,7 @@
           <div class="card-body">
   
             <!-- Makes POST request to /login route -->
-            <form action="/login" method="POST">
+            <form action="/localLogin" method="POST">
               <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" class="form-control" name="email">
@@ -30,7 +30,7 @@
 
         <div class="card">
           <div class="card-body">
-            <a class="btn btn-block btn-social btn-google btn-lg" href="#" role="button">
+            <a class="btn btn-block btn-social btn-google btn-lg" href="/auth/google" role="button">
               <i class="fab fa-google"></i>
               Sign In with Google
             </a>

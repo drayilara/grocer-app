@@ -64,7 +64,7 @@ function updatePriceAndHiddenCheckoutFields(){
     document.getElementById("totalPriceHidden").value = totalPrice;
 
     // update Price for user
-    document.getElementById("productPrice").innerText = "$ " + totalPrice;
+    document.getElementById("productPrice").innerText = "$ " + totalPrice.toFixed(2);
 }
 
 

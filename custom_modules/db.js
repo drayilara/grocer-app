@@ -124,6 +124,14 @@ function isValidEmail(){
   return re.test(this.local.email);
 }
 
+function isValidPassword(){
+      if(this.password == "" && this.password.length < 3){
+        return false
+      }else{
+        return true;
+      }
+}
+
 
 const userSchema = mongoose.Schema({
     local : {
@@ -133,14 +141,14 @@ const userSchema = mongoose.Schema({
           },
 
           password: {
+          validate: [isValidPassword, "Please supply a password of at least 4 characters in length"],
           type : String,
-          required: [1, "Please enter passowrd"]
+          trim : true
       },
       
         email : {
           type : String,
           validate: [isValidEmail, "Please enter a valid email"],
-          required: [1, "Please provide email"],
           unique: true
       }
 
@@ -149,14 +157,14 @@ const userSchema = mongoose.Schema({
      google : {
         name : String,
         token : String,
-        email : String,
+        image : String,
         id : String
     },
 
      facebook : {
         name : String,
         token : String,
-        email : String,
+        image : String,
         id : String
     } 
 })

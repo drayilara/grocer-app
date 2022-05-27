@@ -8,10 +8,11 @@ const bcrypt = require("bcrypt");
 const passport = require("./auth/passport");
 const session = require("express-session"); 
 const MongoStore = require("connect-mongo");
+const _ = require("lodash");
 
-// Load needed custom modules
-const db = require('./custom_modules/db.js');
-const Users = db.Users;
+// Destructure db
+const { Users, Categories, connectToDB } = require('./custom_modules/db.js');
+
 
 // Get Routers
 const clientRouter = require('./routes/client.js');
@@ -35,8 +36,8 @@ app.use('/client', clientRouter);
 app.use('/admin', adminRouter);
 
 // connect to db
-db.connectToDB();
-const Categories = db.Categories;
+connectToDB();
+
 
 // connect to server
 connectToServer();
@@ -74,8 +75,8 @@ app.route("/register")
     .post((req,res) =>  {
         const saltRounds = 10;
         const password = req.body.password;
-        const email = req.body.email;
-        const name = req.body.name;
+        const email = req.body.email.trim();
+        const name = _.capitalize(req.body.name.trim());
     
         bcrypt.hash(password, saltRounds, function(err, hash) {
             // Store hash in your password DB.
@@ -93,7 +94,7 @@ app.route("/register")
                 Users.create(newUser, function(err, user){
                     if(err) console.log(err.message);
         
-                    res.redirect("/login")
+                    res.redirect("/localLogin")
                 })
             }       
         });
@@ -106,29 +107,42 @@ app.route("/register")
 // Login route
 
 app.get("/login", (req,res) => {
-    res.render("userLogin");
-})
-
-app.post("/login", passport.authenticate("local", {failureRedirect: "/login", successRedirect: "/actualHome"}));
-
-
+        res.render("userLogin");
+    })
+    
+app.post("/localLogin", passport.authenticate("local", {failureRedirect: "/loginFailure", successRedirect: "/"}));
 
 
+app.get("/loginFailure", (req,res) => {
+    res.render("loginFailure");
+});
+
+// send client to google
+
+app.get("/auth/google", passport.authenticate('google', { scope: ['profile'] }))
 
 
-
-
-
-
-
-
-
-
-
+// google redirect url
+app.get("/auth/google/toucan", passport.authenticate('google', { failureRedirect: '/loginFailure', successRedirect: '/' }))
 
 
 
-app.get('/actualHome', async (req,res) => {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+app.get('/', async (req,res) => {
     // Get All products and categories from db
         await Categories.find({}, (err, collections) => {
         if(err) res.send(`Error: ${err.message}`)
@@ -158,7 +172,7 @@ app.get('/actualHome', async (req,res) => {
 
 
 async function connectToServer() {
-    const PORT = 3000;
+    const PORT = 80;
     await app.listen(PORT, () => console.log('Web server is running on port ' + PORT));
 }
 
