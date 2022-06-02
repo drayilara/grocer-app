@@ -1,6 +1,7 @@
 // Init
 require("dotenv").config()
 const express = require('express');
+require("express-async-errors");
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
 const upload = require("./custom_modules/fileupload.js");
@@ -9,6 +10,7 @@ const passport = require("./auth/passport");
 const session = require("express-session"); 
 const MongoStore = require("connect-mongo");
 const _ = require("lodash");
+const { isClient } = require("./auth/authLogic");
 
 // Destructure db
 const { Users, Categories, connectToDB } = require('./custom_modules/db.js');
@@ -42,6 +44,13 @@ connectToDB();
 // connect to server
 connectToServer();
 
+
+// Error handling
+
+const errorHandling = (err, req, res, next) => {
+        console.log(err.message);
+}
+
 // Login and sessions
 // 5 days of maxAge
 const cookiesMaxAge = 432000000;
@@ -72,29 +81,32 @@ app.route("/register")
         res.render("userRegister");
     })
 
-    .post((req,res) =>  {
+    .post(async (req,res) =>  {
         const saltRounds = 10;
         const password = req.body.password;
         const email = req.body.email.trim();
         const name = _.capitalize(req.body.name.trim());
+
+        
     
-        bcrypt.hash(password, saltRounds, function(err, hash) {
+        await bcrypt.hash(password, saltRounds, async function(err, hash) {
             // Store hash in your password DB.
-            if(err) console.log(err.message)
+            if(err) throw new Error(err);
     
             else{
                 const newUser = new Users({
                     local : {
                         name: name,
                         email : email,
-                        password : hash
+                        password : hash,
+                        isAdmin : false
                     }
                 })
     
-                Users.create(newUser, function(err, user){
-                    if(err) console.log(err.message);
+               await Users.create(newUser, function(err, user){
+                    if(err) throw new Error(err);
         
-                    res.redirect("/localLogin")
+                    res.redirect("/")
                 })
             }       
         });
@@ -110,7 +122,22 @@ app.get("/login", (req,res) => {
         res.render("userLogin");
     })
     
-app.post("/localLogin", passport.authenticate("local", {failureRedirect: "/loginFailure", successRedirect: "/"}));
+app.post("/login", passport.authenticate("local", {failureRedirect: "/loginFailure", session: true}), (req, res) => {
+    res.redirect("/checkUserType");
+});
+
+app.get("/checkUserType", (req, res) => {
+
+    let isAdmin = req.user.local.isAdmin;
+
+    if(isAdmin) {
+        // user is admin --- direct to default admin page
+        res.redirect("/admin/allProducts");
+    }else {
+        // user is a client
+        res.redirect("/");
+    }
+})
 
 
 app.get("/loginFailure", (req,res) => {
@@ -118,7 +145,6 @@ app.get("/loginFailure", (req,res) => {
 });
 
 // send client to google
-
 app.get("/auth/google", passport.authenticate('google', { scope: ['profile'] }))
 
 
@@ -131,6 +157,17 @@ app.get("/auth/google/toucan", passport.authenticate('google', { failureRedirect
 
 
 
+/*
+The code here is for facebook auth,but they require https even in testing enviroment.Their add domains input field is also currentlu buggy
+Date : May 28, 2022.
+
+app.get('/auth/facebook', passport.authenticate('facebook'));
+
+
+// facebook redirect url
+app.get("/auth/facebook/toucan",  passport.authenticate('facebook', { failureRedirect: '/login', successRedirect: "/" }));
+
+*/
 
 
 
@@ -142,10 +179,13 @@ app.get("/auth/google/toucan", passport.authenticate('google', { failureRedirect
 
 
 
-app.get('/', async (req,res) => {
+
+
+
+app.get('/', isClient , async (req,res) => {
     // Get All products and categories from db
         await Categories.find({}, (err, collections) => {
-        if(err) res.send(`Error: ${err.message}`)
+        if(err) throw new Error(err);
         let products;
         if(collections) {  
            products = collections.reduce((accumulator, currentCategory) => accumulator.concat(currentCategory.products),[]);
@@ -167,7 +207,7 @@ app.get('/', async (req,res) => {
 
 
 
-
+app.use(errorHandling);
 
 
 

@@ -1,6 +1,7 @@
 const express = require('express');
 const clientRouter = new express.Router();
 const controllers = require('../controllers/client.js')
+const { isClient } = require("../auth/authLogic");
 
 // Get contorllers
 const viewProduct = controllers.viewProduct
@@ -10,7 +11,7 @@ const checkout = controllers.checkout
 
 
 clientRouter
-    .get('/viewProduct/:productId', viewProduct)
+    .get('/viewProduct/:productId', isClient, viewProduct)
 
 clientRouter
     .get('/productDescription/:productId', productDescription)

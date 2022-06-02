@@ -144,13 +144,18 @@ const userSchema = mongoose.Schema({
           validate: [isValidPassword, "Please supply a password of at least 4 characters in length"],
           type : String,
           trim : true
-      },
+          },
       
-        email : {
+          email : {
           type : String,
           validate: [isValidEmail, "Please enter a valid email"],
           unique: true
-      }
+          },
+
+          isAdmin : {
+            required : [true, "Is user admin?"],
+            type : Boolean
+          }
 
     },
 

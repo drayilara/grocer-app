@@ -1,51 +1,38 @@
 const express = require('express');
 const adminRouter = new express.Router();
-const controllers = require('../controllers/admin.js');
+const {allProducts, addProductGET, addProductPOST, categoriesGET, categoriesPOST, createCategory, adminCategoryActions, editCategory, adminProductActions, editProduct} = require('../controllers/admin.js');
+const { isAdmin } = require("../auth/authLogic.js");
 // const models = require('../custom_modules/db.js');
 // const path = require("path");
 
 
 
-// Load controls
-const allProducts = controllers.allProducts
-const addProductGET = controllers.addProductGET
-const addProductPOST = controllers.addProductPOST
-const categoriesGET = controllers.categoriesGET
-const categoriesPOST = controllers.categoriesPOST
-const createCategory = controllers.createCategory
-const adminCategoryActions = controllers.adminCategoryActions
-const editCategory = controllers.editCategory
-const adminProductActions = controllers.adminProductActions
-const editProduct = controllers.editProduct
-
-
-
 adminRouter
-    .get('/allProducts', allProducts)
-    .post('/allProducts', adminProductActions)
+    .get('/allProducts', isAdmin, allProducts)
+    .post('/allProducts', isAdmin, adminProductActions)
 
 adminRouter
     .route('/addProduct') 
-    .get(addProductGET)
-    .post(addProductPOST);
+    .get(isAdmin, addProductGET)
+    .post(isAdmin, addProductPOST);
 
 adminRouter
     .route('/categories')
-    .get(categoriesGET)
-    .post(categoriesPOST)
+    .get(isAdmin, categoriesGET)
+    .post(isAdmin, categoriesPOST)
 
 adminRouter
-    .post('/createCategory', createCategory);
+    .post('/createCategory', isAdmin, createCategory);
 
 adminRouter
-    .post('/categories/actions', adminCategoryActions)
+    .post('/categories/actions', isAdmin, adminCategoryActions)
 
 
 adminRouter
-    .post('/editCategory', editCategory)
+    .post('/editCategory', isAdmin, editCategory)
 
 adminRouter
-    .post('/editProduct', editProduct)
+    .post('/editProduct', isAdmin, editProduct)
 
 
 
