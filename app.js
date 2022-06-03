@@ -1,13 +1,13 @@
 // Init
-require("dotenv").config()
+require("dotenv").config();
 const express = require('express');
 require("express-async-errors");
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
 const upload = require("./custom_modules/fileupload.js");
 const bcrypt = require("bcrypt");
+const session = require("express-session");
 const passport = require("./auth/passport");
-const session = require("express-session"); 
 const MongoStore = require("connect-mongo");
 const _ = require("lodash");
 const { isClient } = require("./auth/authLogic");
@@ -26,12 +26,33 @@ const app = express();
 // template engine -- ejs
 app.set('view engine', 'ejs');
 
+// session options
+const sessionOptions = {
+    secret : process.env.SESSION_SECRET,
+    store : MongoStore.create({mongoUrl: "mongodb://localhost:27017/shopdb"}),
+    resave: false,
+    saveUninitialized : true,
+    cookie: { maxAge: 24 * 60 * 60 * 1000 }
+}
+
+/*
+* -ensure session is fully set up before
+* calling passport.session() else req.user may get 
+* lost in transit.
+*/
+
 // app-level middleware
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(express.static(__dirname + '/public')); 
+// order is very important here.
+app.use(session(sessionOptions));
+app.use(passport.initialize());
+app.use(passport.session());
 
-// Intercept any upload
 app.use(upload);
+
+
+
 
 // Mount Routers
 app.use('/client', clientRouter);
@@ -45,26 +66,11 @@ connectToDB();
 connectToServer();
 
 
-// Error handling
+// Error handling---- Mounted at the bottom
 
 const errorHandling = (err, req, res, next) => {
         console.log(err.message);
 }
-
-// Login and sessions
-// 5 days of maxAge
-const cookiesMaxAge = 432000000;
-
-app.use(session({
-    secret : process.env.SESSION_SECRET,
-    store : MongoStore.create({mongoUrl: "mongodb://localhost:27017/shopdb", autoRemove: "native"}),
-    resave: false,
-    saveUninitialized : true,
-    cookie: {maxAge: cookiesMaxAge}
-}));
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 
 
@@ -122,21 +128,21 @@ app.get("/login", (req,res) => {
         res.render("userLogin");
     })
     
-app.post("/login", passport.authenticate("local", {failureRedirect: "/loginFailure", session: true}), (req, res) => {
-    res.redirect("/checkUserType");
-});
+app.post("/login", passport.authenticate("local", {failureRedirect: "/loginFailure", successRedirect: "/checkUserType"}));
 
 app.get("/checkUserType", (req, res) => {
-
+    
     let isAdmin = req.user.local.isAdmin;
 
     if(isAdmin) {
         // user is admin --- direct to default admin page
         res.redirect("/admin/allProducts");
     }else {
-        // user is a client
+        // user is a client --- redirect to products page
         res.redirect("/");
     }
+
+    res.end();
 })
 
 
@@ -207,9 +213,9 @@ app.get('/', isClient , async (req,res) => {
 
 
 
+
+
 app.use(errorHandling);
-
-
 
 async function connectToServer() {
     const PORT = 80;

@@ -1,7 +1,10 @@
 
+
 const isClient = (req, res, next) => {
+
+    let admin = req.user.local.isAdmin; 
     
-    if(req.isAuthenticated()) {
+    if(req.isAuthenticated() && !admin) {
         next();
     } else {
         res.redirect("/login");
@@ -10,14 +13,14 @@ const isClient = (req, res, next) => {
 
 
 const isAdmin = (req, res, next) => {
-    
-    let isAdmin = req.user.local.isAdmin;
+
+    let admin = req.user.local.isAdmin; 
     
 
-    if(req.isAuthenticated() && isAdmin) {
+    if(req.isAuthenticated() && admin) {
         next();
     }else {
-        res.redirect(400);
+        res.sendStatus(401);
     }
 }
 
