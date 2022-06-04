@@ -1,13 +1,11 @@
 
 
-const isClient = (req, res, next) => {
-
-    let admin = req.user.local.isAdmin; 
+const isClient = (req, res, next) => { 
     
-    if(req.isAuthenticated() && !admin) {
+    if(req.isAuthenticated()) {
         next();
     } else {
-        res.redirect("/login");
+        res.redirect("/auth/login");
     }
 }
 

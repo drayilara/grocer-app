@@ -4,21 +4,22 @@ const express = require('express');
 require("express-async-errors");
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
-const upload = require("./custom_modules/fileupload.js");
+const upload = require("./custom_modules/fileupload");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
 const passport = require("./auth/passport");
 const MongoStore = require("connect-mongo");
 const _ = require("lodash");
-const { isClient } = require("./auth/authLogic");
+
 
 // Destructure db
 const { Users, Categories, connectToDB } = require('./custom_modules/db.js');
 
 
 // Get Routers
-const clientRouter = require('./routes/client.js');
-const adminRouter = require('./routes/admin.js');
+const clientRouter = require('./routes/client');
+const adminRouter = require('./routes/admin');
+const authRouter = require("./routes/auth");
 
 // Create server
 const app = express(); 
@@ -57,6 +58,7 @@ app.use(upload);
 // Mount Routers
 app.use('/client', clientRouter);
 app.use('/admin', adminRouter);
+app.use("/auth", authRouter);
 
 // connect to db
 connectToDB();
@@ -74,121 +76,7 @@ const errorHandling = (err, req, res, next) => {
 
 
 
-
-
-
-
-
-
-// Register route
-
-app.route("/register")
-    .get((req,res) =>  {
-        res.render("userRegister");
-    })
-
-    .post(async (req,res) =>  {
-        const saltRounds = 10;
-        const password = req.body.password;
-        const email = req.body.email.trim();
-        const name = _.capitalize(req.body.name.trim());
-
-        
-    
-        await bcrypt.hash(password, saltRounds, async function(err, hash) {
-            // Store hash in your password DB.
-            if(err) throw new Error(err);
-    
-            else{
-                const newUser = new Users({
-                    local : {
-                        name: name,
-                        email : email,
-                        password : hash,
-                        isAdmin : false
-                    }
-                })
-    
-               await Users.create(newUser, function(err, user){
-                    if(err) throw new Error(err);
-        
-                    res.redirect("/")
-                })
-            }       
-        });
-    })
-
-
-
-
-
-// Login route
-
-app.get("/login", (req,res) => {
-        res.render("userLogin");
-    })
-    
-app.post("/login", passport.authenticate("local", {failureRedirect: "/loginFailure", successRedirect: "/checkUserType"}));
-
-app.get("/checkUserType", (req, res) => {
-    
-    let isAdmin = req.user.local.isAdmin;
-
-    if(isAdmin) {
-        // user is admin --- direct to default admin page
-        res.redirect("/admin/allProducts");
-    }else {
-        // user is a client --- redirect to products page
-        res.redirect("/");
-    }
-
-    res.end();
-})
-
-
-app.get("/loginFailure", (req,res) => {
-    res.render("loginFailure");
-});
-
-// send client to google
-app.get("/auth/google", passport.authenticate('google', { scope: ['profile'] }))
-
-
-// google redirect url
-app.get("/auth/google/toucan", passport.authenticate('google', { failureRedirect: '/loginFailure', successRedirect: '/' }))
-
-
-
-
-
-
-
-/*
-The code here is for facebook auth,but they require https even in testing enviroment.Their add domains input field is also currentlu buggy
-Date : May 28, 2022.
-
-app.get('/auth/facebook', passport.authenticate('facebook'));
-
-
-// facebook redirect url
-app.get("/auth/facebook/toucan",  passport.authenticate('facebook', { failureRedirect: '/login', successRedirect: "/" }));
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-app.get('/', isClient , async (req,res) => {
+app.get('/', async (req,res) => {
     // Get All products and categories from db
         await Categories.find({}, (err, collections) => {
         if(err) throw new Error(err);
@@ -199,16 +87,6 @@ app.get('/', isClient , async (req,res) => {
         res.render(`home`, {collections : collections, products: products});
      })
     })
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -155,6 +155,11 @@ const userSchema = mongoose.Schema({
           isAdmin : {
             required : [true, "Is user admin?"],
             type : Boolean
+          },
+
+          role : {
+            required : [true, "Pls supply role"],
+            type : String
           }
 
     },

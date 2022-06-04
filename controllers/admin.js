@@ -1,5 +1,5 @@
 // load needed custom module
-const db = require('../custom_modules/db.js');
+const { Categories } = require('../custom_modules/db.js');
 // Lodash
 const _ = require('lodash');
 // path 
@@ -8,9 +8,9 @@ const path = require("path");
 const faker = require('faker');
 
 
-// Get Models
-const Categories = db.Categories
-
+const adminLandingPage = ((req,res) => {
+  res.render("../views/adminLandingPage");
+})
 
 
 
@@ -51,12 +51,6 @@ const addProductGET = (req,res) => {
 
 
 
-
-
-
-
-
-
 const editProduct = ((req,res) => {
   // req.file.filename read directly from upload middleware mounted on app @ app.js
   let productId = req.body.id;
@@ -79,11 +73,6 @@ const editProduct = ((req,res) => {
       else res.redirect("/admin/allProducts");
   })
 })
-
-
-
-
-
 
 
 
@@ -150,12 +139,6 @@ const categoriesPOST = (req,res) => {
 
 
 
-
-
-
-
-
-
 const createCategory =  async (req,res) => {
     let newCat = _.capitalize(req.body.categoryName);
     let date = new Date();
@@ -179,10 +162,6 @@ const createCategory =  async (req,res) => {
     }
     res.render('../views/adminAddCategory', {status:status});
 }
-
-
-
-
 
 
 
@@ -222,14 +201,6 @@ const adminCategoryActions = (req,res) => {
 
 
 }
-
-
-
-
-
-
-
-
 
 
 
@@ -315,5 +286,6 @@ module.exports = {
     adminCategoryActions,
     editCategory,
     adminProductActions,
-    editProduct
+    editProduct,
+    adminLandingPage
 }

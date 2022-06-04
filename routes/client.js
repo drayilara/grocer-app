@@ -1,17 +1,12 @@
 const express = require('express');
 const clientRouter = new express.Router();
-const controllers = require('../controllers/client.js')
+const { viewProduct, productDescription, categories, checkout} = require('../controllers/client')
 const { isClient } = require("../auth/authLogic");
 
-// Get contorllers
-const viewProduct = controllers.viewProduct
-const productDescription = controllers.productDescription
-const categories = controllers.categories
-const checkout = controllers.checkout
 
 
 clientRouter
-    .get('/viewProduct/:productId', isClient, viewProduct)
+    .get('/viewProduct/:productId', viewProduct)
 
 clientRouter
     .get('/productDescription/:productId', productDescription)
@@ -20,6 +15,6 @@ clientRouter
     .get('/categories', categories)
 
 clientRouter
-    .post('/checkout', checkout);
+    .post('/checkout', isClient, checkout);
 
 module.exports = clientRouter;
